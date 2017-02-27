@@ -3,24 +3,24 @@
 <head>
   <meta charset="utf-8">
   
-  <title>shanruo</title>
+  <title>Shanruo</title>
   <meta name="author" content="shanruo">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-  <meta property="og:site_name" content="shanruo"/>
+  <meta property="og:site_name" content="Shanruo"/>
 
   
     <meta property="og:image" content="undefined"/>
   
 
   <link href="/favicon.ico" rel="icon">
-  <link rel="alternate" href="/atom.xml" title="shanruo" type="application/atom+xml">
-  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" type="text/css">
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" type="text/css">
-<link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="alternate" href="/atom.xml" title="Shanruo" type="application/atom+xml">
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+<link rel="stylesheet" href="/css/style.css">
   <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
   <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
   
@@ -58,7 +58,7 @@
 			<div class="logo">
 				<img src="/logo.png" alt="Profile Picture">
 			</div>
-			<div id="title">shanruo</div>
+			<div id="title">Shanruo</div>
 		</a>
 
 		
@@ -99,6 +99,101 @@
   <div class="post-content">
     <header>
       
+      <time datetime="2017-02-27T09:43:13.000Z"><a href="/2017/02/27/插件总是被禁用怎么办？/">Mon, Feb 27 2017, 5:43:13 pm</a></time>
+
+  
+    <h1 class="title"><a href="/2017/02/27/插件总是被禁用怎么办？/">插件总是被禁用怎么办？</a></h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <p>在开发chrome浏览器插件时，总是出现添加了crx扩展程序，重启浏览器就不好使了，各种被禁用，这里有两种普遍情况，一种是上传发布到了应用市场，但是很多用户要直接在应用市场下载是需要翻墙的，只能手动添加打包的crx扩展程序包，但是会被识别非chrome store扩展。</p>
+<p><img src="/image/20170227plugin/plugin01.png"></p>
+<p>一种是除chrome web store下载的所有第三方扩展，Chrome的新策略里面都禁用了，导致很多插件都没法用，这里给大家就这两种通用情况介绍下解决方案。</p>
+<h1 id="已发布chrome应用商店"><a href="#已发布chrome应用商店" class="headerlink" title="已发布chrome应用商店"></a>已发布chrome应用商店</h1><p>针对，已经上传发布的插件应用，用户直接通过chrome网上应用商店需要翻墙。</p>
+<p><img src="/image/20170227plugin/plugin02.png"></p>
+<p>这就无形之间提升了插件使用的门槛，所以这里主要解决如何提供给用户一个可用又不被禁用的方案。</p>
+<p>如果只是单纯的通过浏览器的打包功能打包的crx包文件添加安装，依然会被识别为非chrome store的第三方插件，自然会被禁用，一旦重启浏览器，就用不了。</p>
+<p>因此，一定要提供给用户的是从应用商店上下载下来的crx文件，这样就肯定妥妥的没问题。下载方法也很简单，下载地址：<a href="http://chrome-extension-downloader.com/" target="_blank" rel="external">http://chrome-extension-downloader.com/</a><br>这里需要输入要下载的插件的ID，也就是唯一标示。</p>
+<p><img src="/image/20170227plugin/plugin03.png"></p>
+<p><img src="/image/20170227plugin/plugin04.png"></p>
+<p>好了，这样就妥妥的下载了，可以正常使用不被禁用的插件包了，然后再上传到dcms，生成一个下载连接地址，这样就可以对外开放了。</p>
+<h1 id="非chrome-store的第三方插件"><a href="#非chrome-store的第三方插件" class="headerlink" title="非chrome store的第三方插件"></a>非chrome store的第三方插件</h1><p>谷歌在2012年Chrome V21+开始禁止第三方扩展静默安装，2014年Chrome V30+开始任何非Chrome 网上应用店(Chrome WebStore)下载的扩展将自动停用。如果自己折腾一个Chrome插件crx打包之后拖进chrome://extensions安装启用一会儿就会被安静的自动停用，自己弄个插件在自己的Chrome浏览器上正常安装&amp;测试都不能够。提交Chrome WebStore审核需要一次性付费5美元，用于验证开发者账户。插件发布审查周期需要等1-3个工作日，更新个插件也要等半小时。一个开发者帐号限制发布最多20个扩展。世界这么大，钱不是问题，可能更想自由些。那么如何解决Chrome浏览器安装任意第三方扩展程序都自动停用的问题呢？</p>
+<h2 id="Chrome浏览器扩展程序内置的保护机制"><a href="#Chrome浏览器扩展程序内置的保护机制" class="headerlink" title="Chrome浏览器扩展程序内置的保护机制"></a>Chrome浏览器扩展程序内置的保护机制</h2><p>Chrome内置浏览器安全&amp;隐私保护机制，允许本地用户自定义配置扩展程序相关的安全策略。比如：用户不能安装任何已被列入黑名单的扩展程序（除非它们被加入白名单）。当然也可以通过在ExtensionInstallForcelist中指定扩展程序来强制Google Chrome自动安装这些扩展程序。强制安装列表中的扩展程序均会被安装（无论它们是否包含在黑名单内）。</p>
+<ul>
+<li>扩展程序安装黑名单(ExtensionInstallBlacklist)</li>
+<li>扩展程序安装白名单(ExtensionInstallWhitelist)</li>
+<li>强制安装的扩展程序的列表(ExtensionInstallForcelist)</li>
+<li>扩展程序、应用和用户脚本安装源(ExtensionInstallSources)</li>
+<li>允许的应用/扩展程序类型(ExtensionAllowedTypes)</li>
+<li>Ps:优先级&amp;适用范围依次往下逐级递增。</li>
+</ul>
+<h2 id="方法一：添加指定扩展程序到Chrome白名单"><a href="#方法一：添加指定扩展程序到Chrome白名单" class="headerlink" title="方法一：添加指定扩展程序到Chrome白名单"></a>方法一：添加指定扩展程序到Chrome白名单</h2><p>通过配置扩展程序安装白名单(ExtensionInstallWhitelist)很简单就可以覆盖内置的扩展安装策略，从而正常安装启用指定第三方扩展程序。</p>
+<ul>
+<li>打开chrome://extensions（扩展程序管理器）页面，拖放xxx.crx上来</li>
+<li>按照提示确认安装</li>
+<li>提取拓展插件的ID</li>
+<li>找到被禁用的扩展，记下ID（设白名单用）</li>
+<li>添加指定扩展程序到白名单</li>
+</ul>
+<h2 id="方法二：使用组策略管理模版"><a href="#方法二：使用组策略管理模版" class="headerlink" title="方法二：使用组策略管理模版"></a>方法二：使用组策略管理模版</h2><p>通过组策略Chrome管理模版，轻松配置Chrome浏览器众多的隐藏内置选项，更高效的使用Chrome，是官方推荐的最简便、可扩展调整的最佳方法。</p>
+<ul>
+<li>首先下载管理模版并解压到硬盘任意可正常读写访问的地方。</li>
+<li>打开运行程序对话框输入：gpedit.msc 打开本地组策略编辑器，在 管理模版 上右键单击添加对应操作系统当前语言的管理模块，这里我们选择zh-CN中chrome.adm安装即可</li>
+<li>再展开 计算机配置 -&gt; 管理模板 -&gt; 经典管理模版(ADM) -&gt; Google -&gt; Google Chrome -&gt; 扩展程序</li>
+<li>右侧双击打开“配置扩展程序安装白名单” -&gt; 选中“已启用”，点击“显示…” 双击列表中值这一列输入希望安装的第三方扩展程序的唯一ID 确定保存 -&gt; 点击应用 确定，然后退出整个本地组策略编辑器，无需重启Chrome浏览器，只需要重新打开扩展程序管理器就可以直接启用被禁的第三方扩展插件。</li>
+</ul>
+<p>Tips:嫌逐一的为拓展添加白名单麻烦，配置扩展程序、应用和用户脚本安装源 状态为启用 值为：<all_urls> 应用保存即可。值得一提的是Chrome组策略管理模版里头带了很多高大上的设置，请根据相应的配置提示自行挖掘尝试。</all_urls></p>
+<p>如何检查配置的政策是否正确有效？：打开chrome://policy查看相应的策略的状态是否为确定即可。</p>
+<p>关于管理策略模板来源以及更具体的使用情况可以访问Chromium官网<a href="http://www.chromium.org/administrators/policy-templates" target="_blank" rel="external">获取更多</a></p>
+
+      
+    </div>
+    <footer>
+      
+        <div class="alignleft">
+            <a href="/2017/02/27/插件总是被禁用怎么办？/#more" class="more-link"><i class="fa fa-chevron-right"></i>Read More</a>
+        </div>
+        
+        
+          <div class="alignright"> 
+            <a href="http://shanruo.github.io/2017/02/27/插件总是被禁用怎么办？/#comment" class="comment-link">
+              <i class="fa fa-comments"></i><span class="ds-thread-count" data-thread-key="/2017/02/27/插件总是被禁用怎么办？/">&nbsp;
+              </span>
+            </a>
+          </div>
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
       <time datetime="2015-10-07T01:31:04.000Z"><a href="/2015/10/07/css动画/">Wed, Oct 7 2015, 9:31:04 am</a></time>
 
   
@@ -113,16 +208,16 @@
     <div class="entry">
       
         <p>今天我们一起来学习有关于CSS3制作动画的几个属性：变形（transform）、转换（transition）和动画（animation）等及更高级的CSS3技术。</p>
-<h2 id="变形（transform）">变形（transform）</h2><p>Transform字面上就是变形，改变的意思。在CSS3中transform主要包括以下几种：旋转rotate、扭曲skew、缩放scale和移动translate以及矩阵变形matrix。下面我们一起来看看CSS3中transform的旋转rotate、扭曲skew、缩放scale和移动translate具体如何实现。<br>语法：</p>
+<h2 id="变形（transform）"><a href="#变形（transform）" class="headerlink" title="变形（transform）"></a>变形（transform）</h2><p>Transform字面上就是变形，改变的意思。在CSS3中transform主要包括以下几种：旋转rotate、扭曲skew、缩放scale和移动translate以及矩阵变形matrix。下面我们一起来看看CSS3中transform的旋转rotate、扭曲skew、缩放scale和移动translate具体如何实现。<br>语法：</p>
 <pre><code>transform ： none | <transform-function> [ <transform-function> ]*
 也就是：transform: rotate | scale | skew | translate |matrix;
 </transform-function></transform-function></code></pre>
 
-<h3 id="旋转（rotate）">旋转（rotate）</h3><p>rotate(<angle>) ：通过指定的角度参数对原元素指定一个2D rotation（2D 旋转），需先有transform-origin属性的定义。transform-origin定义的是旋转的基点，其中angle是指旋转角度，如果设置的值为正数表示顺时针旋转，如果设置的值为负数，则表示逆时针旋转。如：transform:rotate(30deg):<br><img src="/image/20151007css动画/rotate.png" style="margin-left:30%;margin-top:20px;"><br><a href="http://codepen.io/shanruo/pen/BoRPeZ" target="_blank" rel="external">demo</a></angle></p>
-<h3 id="移动（translate）">移动（translate）</h3><p>移动translate我们分为三种情况：translate(x,y)水平方向和垂直方向同时移动（也就是X轴和Y轴同时移动）；translateX(x)仅水平方向移动（X轴移动）；translateY(Y)仅垂直方向移动（Y轴移动），具体使用方法如下：<br>1、translate(<translation-value>[, <translation-value>]) ：通过矢量[tx, ty]指定一个2D translation，tx 是第一个过渡值参数，ty 是第二个过渡值参数选项。如果 未被提供，则ty以 0 作为其值。也就是translate(x,y),它表示对象进行平移，按照设定的x,y参数值,当值为负数时，反方向移动物体，其基点默认为元素 中心点，也可以根据transform-origin进行改变基点。如transform:translate(50px,20px):<br><img src="/image/20151007css动画/translate.png" style="margin-left:30%;margin-top:20px;"><br><a href="http://codepen.io/shanruo/pen/dYWqMM" target="_blank" rel="external">demo</a><br>2、translateX(<translation-value>) ： 通过给定一个X方向上的数目指定一个translation。只向x轴进行移动元素，同样其基点是元素中心点，也可以根据transform-origin改变基点位置。如：transform:translateX(50px).<br>3、translateY(<translation-value>) ：通过给定Y方向的数目指定一个translation。只向Y轴进行移动，基点在元素心点，可以通过transform-origin改变基点位置。如：transform:translateY(20px).</translation-value></translation-value></translation-value></translation-value></p>
-<h3 id="缩放（scale）">缩放（scale）</h3><p>缩放scale和移动translate是极其相似，他也具有三种情况：scale(x,y)使元素水平方向和垂直方向同时缩放（也就是X轴和Y轴同时缩放）；scaleX(x)元素仅水平方向缩放（X轴缩放）；scaleY(y)元素仅垂直方向缩放（Y轴缩放），但它们具有相同的缩放中心点和基数，其中心点就是元素的中心位置，缩放基数为1，如果其值大于1元素就放大，反之其值小于1，元素缩小。下面我们具体来看看这三种情况具体使用方法：<br>1、scale(<number>[, <number>])：提供执行[sx,sy]缩放矢量的两个参数指定一个2D scale（2D缩放）。如果第二个参数未提供，则取与第一个参数一样的值。scale(X,Y)是用于对元素进行缩放，可以通过transform-origin对元素的基点进行设置，同样基点在元素中心位置；基中X表示水平方向缩放的倍数，Y表示垂直方向的缩放倍数，而Y是一个可选参数，如果没有设置Y值，则表示X，Y两个方向的缩放倍数是一样的。并以X为准。如：transform:scale(1.5,1.5):<br><img src="/image/20151007css动画/scale.png" style="margin-left:30%;margin-top:20px;"><br><a href="http://codepen.io/shanruo/pen/NGjLRM" target="_blank" rel="external">demo</a><br>2、scaleX(<number>) ： 使用 [sx,1] 缩放矢量执行缩放操作，sx为所需参数。scaleX表示元素只在X轴(水平方向)缩放元素，他的默认值是(1,1)，其基点一样是在元素的中心位置，我们同样是通过transform-origin来改变元素的基点。如：transform:scaleX(2).<br>3、scaleY(<number>) ： 使用 [1,sy] 缩放矢量执行缩放操作，sy为所需参数。scaleY表示元素只在Y轴（垂直方向）缩放元素，其基点同样是在元素中心位置，可以通过transform-origin来改变元素的基点。如transform:scaleY(2).</number></number></number></number></p>
-<h3 id="扭曲（skew）">扭曲（skew）</h3><p>扭曲skew和translate、scale一样同样具有三种情况：skew(x,y)使元素在水平和垂直方向同时扭曲（X轴和Y轴同时按一定的角度值进行扭曲变形）；skewX(x)仅使元素在水平方向扭曲变形（X轴扭曲变形）；skewY(y)仅使元素在垂直方向扭曲变形（Y轴扭曲变形），具体使用如下：<br>1、skew(<angle> [, <angle>]) ：X轴Y轴上的skew transformation（斜切变换）。第一个参数对应X轴，第二个参数对应Y轴。如果第二个参数未提供，则值为0，也就是Y轴方向上无斜切。skew是用来对元素进行扭曲变行，第一个参数是水平方向扭曲角度，第二个参数是垂直方向扭曲角度。其中第二个参数是可选参数，如果没有设置第二个参数，那么Y轴为0deg。同样是以元素中心为基点，我们也可以通过transform-origin来改变元素的基点位置。如：transform:skew(30deg,20deg):<br><img src="/image/20151007css动画/skew.png" style="margin-left:30%;margin-top:20px;"><br><a href="http://codepen.io/shanruo/pen/jbmvVv" target="_blank" rel="external">demo</a><br>2、skewX(<angle>) ： 按给定的角度沿X轴指定一个skew transformation（斜切变换）。skewX是使元素以其中心为基点，并在水平方向（X轴）进行扭曲变行，同样可以通过transform-origin来改变元素的基点。如：transform:skewX(30deg).<br>3、skewY(<angle>) ： 按给定的角度沿Y轴指定一个skew transformation（斜切变换）。skewY是用来设置元素以其中心为基点并按给定的角度在垂直方向（Y轴）扭曲变形。同样我们可以通过transform-origin来改变元素的基点。如：transform:skewY(10deg).</angle></angle></angle></angle></p>
-<h3 id="矩阵（matrix）">矩阵（matrix）</h3><p>matrix(number, number, number, number, number, number) ：以一个含六值的(a,b,c,d,e,f)变换矩阵的形式指定一个2D变换，相当于直接应用一个[a b c d e f]变换矩阵。就是基于水平方向（X轴）和垂直方向（Y轴）重新定位元素,此属性值使用涉及到数学中的矩阵，我在这里只是简单的说一下CSS3中的transform有这么一个属性值，如果有感兴趣的朋友可以去了解更深层次的martix使用方法，这里就不多说了。<br><strong>tip:</strong><br>transform-origin跟其他的css3属性一样，我们需要在不同的浏览内核中加上相应的前缀，下面列出各种浏览器内核下的语法规则：</p>
+<h3 id="旋转（rotate）"><a href="#旋转（rotate）" class="headerlink" title="旋转（rotate）"></a>旋转（rotate）</h3><p>rotate(<angle>) ：通过指定的角度参数对原元素指定一个2D rotation（2D 旋转），需先有transform-origin属性的定义。transform-origin定义的是旋转的基点，其中angle是指旋转角度，如果设置的值为正数表示顺时针旋转，如果设置的值为负数，则表示逆时针旋转。如：transform:rotate(30deg):<br><img src="/image/20151007css动画/rotate.png" style="margin-left:30%;margin-top:20px;"><br><a href="http://codepen.io/shanruo/pen/BoRPeZ" target="_blank" rel="external">demo</a></angle></p>
+<h3 id="移动（translate）"><a href="#移动（translate）" class="headerlink" title="移动（translate）"></a>移动（translate）</h3><p>移动translate我们分为三种情况：translate(x,y)水平方向和垂直方向同时移动（也就是X轴和Y轴同时移动）；translateX(x)仅水平方向移动（X轴移动）；translateY(Y)仅垂直方向移动（Y轴移动），具体使用方法如下：<br>1、translate(<translation-value>[, <translation-value>]) ：通过矢量[tx, ty]指定一个2D translation，tx 是第一个过渡值参数，ty 是第二个过渡值参数选项。如果 未被提供，则ty以 0 作为其值。也就是translate(x,y),它表示对象进行平移，按照设定的x,y参数值,当值为负数时，反方向移动物体，其基点默认为元素 中心点，也可以根据transform-origin进行改变基点。如transform:translate(50px,20px):<br><img src="/image/20151007css动画/translate.png" style="margin-left:30%;margin-top:20px;"><br><a href="http://codepen.io/shanruo/pen/dYWqMM" target="_blank" rel="external">demo</a><br>2、translateX(<translation-value>) ： 通过给定一个X方向上的数目指定一个translation。只向x轴进行移动元素，同样其基点是元素中心点，也可以根据transform-origin改变基点位置。如：transform:translateX(50px).<br>3、translateY(<translation-value>) ：通过给定Y方向的数目指定一个translation。只向Y轴进行移动，基点在元素心点，可以通过transform-origin改变基点位置。如：transform:translateY(20px).</translation-value></translation-value></translation-value></translation-value></p>
+<h3 id="缩放（scale）"><a href="#缩放（scale）" class="headerlink" title="缩放（scale）"></a>缩放（scale）</h3><p>缩放scale和移动translate是极其相似，他也具有三种情况：scale(x,y)使元素水平方向和垂直方向同时缩放（也就是X轴和Y轴同时缩放）；scaleX(x)元素仅水平方向缩放（X轴缩放）；scaleY(y)元素仅垂直方向缩放（Y轴缩放），但它们具有相同的缩放中心点和基数，其中心点就是元素的中心位置，缩放基数为1，如果其值大于1元素就放大，反之其值小于1，元素缩小。下面我们具体来看看这三种情况具体使用方法：<br>1、scale(<number>[, <number>])：提供执行[sx,sy]缩放矢量的两个参数指定一个2D scale（2D缩放）。如果第二个参数未提供，则取与第一个参数一样的值。scale(X,Y)是用于对元素进行缩放，可以通过transform-origin对元素的基点进行设置，同样基点在元素中心位置；基中X表示水平方向缩放的倍数，Y表示垂直方向的缩放倍数，而Y是一个可选参数，如果没有设置Y值，则表示X，Y两个方向的缩放倍数是一样的。并以X为准。如：transform:scale(1.5,1.5):<br><img src="/image/20151007css动画/scale.png" style="margin-left:30%;margin-top:20px;"><br><a href="http://codepen.io/shanruo/pen/NGjLRM" target="_blank" rel="external">demo</a><br>2、scaleX(<number>) ： 使用 [sx,1] 缩放矢量执行缩放操作，sx为所需参数。scaleX表示元素只在X轴(水平方向)缩放元素，他的默认值是(1,1)，其基点一样是在元素的中心位置，我们同样是通过transform-origin来改变元素的基点。如：transform:scaleX(2).<br>3、scaleY(<number>) ： 使用 [1,sy] 缩放矢量执行缩放操作，sy为所需参数。scaleY表示元素只在Y轴（垂直方向）缩放元素，其基点同样是在元素中心位置，可以通过transform-origin来改变元素的基点。如transform:scaleY(2).</number></number></number></number></p>
+<h3 id="扭曲（skew）"><a href="#扭曲（skew）" class="headerlink" title="扭曲（skew）"></a>扭曲（skew）</h3><p>扭曲skew和translate、scale一样同样具有三种情况：skew(x,y)使元素在水平和垂直方向同时扭曲（X轴和Y轴同时按一定的角度值进行扭曲变形）；skewX(x)仅使元素在水平方向扭曲变形（X轴扭曲变形）；skewY(y)仅使元素在垂直方向扭曲变形（Y轴扭曲变形），具体使用如下：<br>1、skew(<angle> [, <angle>]) ：X轴Y轴上的skew transformation（斜切变换）。第一个参数对应X轴，第二个参数对应Y轴。如果第二个参数未提供，则值为0，也就是Y轴方向上无斜切。skew是用来对元素进行扭曲变行，第一个参数是水平方向扭曲角度，第二个参数是垂直方向扭曲角度。其中第二个参数是可选参数，如果没有设置第二个参数，那么Y轴为0deg。同样是以元素中心为基点，我们也可以通过transform-origin来改变元素的基点位置。如：transform:skew(30deg,20deg):<br><img src="/image/20151007css动画/skew.png" style="margin-left:30%;margin-top:20px;"><br><a href="http://codepen.io/shanruo/pen/jbmvVv" target="_blank" rel="external">demo</a><br>2、skewX(<angle>) ： 按给定的角度沿X轴指定一个skew transformation（斜切变换）。skewX是使元素以其中心为基点，并在水平方向（X轴）进行扭曲变行，同样可以通过transform-origin来改变元素的基点。如：transform:skewX(30deg).<br>3、skewY(<angle>) ： 按给定的角度沿Y轴指定一个skew transformation（斜切变换）。skewY是用来设置元素以其中心为基点并按给定的角度在垂直方向（Y轴）扭曲变形。同样我们可以通过transform-origin来改变元素的基点。如：transform:skewY(10deg).</angle></angle></angle></angle></p>
+<h3 id="矩阵（matrix）"><a href="#矩阵（matrix）" class="headerlink" title="矩阵（matrix）"></a>矩阵（matrix）</h3><p>matrix(number, number, number, number, number, number) ：以一个含六值的(a,b,c,d,e,f)变换矩阵的形式指定一个2D变换，相当于直接应用一个[a b c d e f]变换矩阵。就是基于水平方向（X轴）和垂直方向（Y轴）重新定位元素,此属性值使用涉及到数学中的矩阵，我在这里只是简单的说一下CSS3中的transform有这么一个属性值，如果有感兴趣的朋友可以去了解更深层次的martix使用方法，这里就不多说了。<br><strong>tip:</strong><br>transform-origin跟其他的css3属性一样，我们需要在不同的浏览内核中加上相应的前缀，下面列出各种浏览器内核下的语法规则：</p>
 <pre><code>
 //Mozilla内核浏览器：firefox3.5+
   -moz-transform-origin: x y;
@@ -150,8 +245,8 @@ transform在不同浏览器内核下的书写规则:
 </code></pre>
 
 
-<h3 id="实例">实例</h3><p>在上面我们详细介绍了CSS3中transform的各种属性值的设置以及其各自的参数，下面我们通过一个实例来看看每一种属性值的使用，主要是我们在下面的菜单中的a:hover中分别使用不同的transform的设置，换句话说，当你移动到链接上时，相应的每一个菜单项有不同的变化，因为我们在每个菜单中使用了transform。<br>从效果图上我们可以清楚的看到菜单上我们分别对应的是transform中的Translate、TranslateX、TranslateY、Rotate、Scale、ScaleX、ScaleY、Skew、SkewX、SkewY和Matrix.<br>效果：<br><img src="/image/20151007css动画/transform.png" style="margin-top:20px;"><br><a href="http://codepen.io/shanruo/pen/XmRPgr" target="_blank" rel="external">demo</a></p>
-<h2 id="转换（transition）">转换（transition）</h2><p>W3C标准中对css3的transition这是样描述的：“css的transition允许css的属性值在一定的时间区间内平滑地过渡。这种效果可以在鼠标单击、获得焦点、被点击或对元素任何改变中触发，并圆滑地以动画效果改变CSS的属性值。”<br>下面我们同样从其最语法和属性值开始一步一步来学习transition的具体使用:<br>语法：</p>
+<h3 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h3><p>在上面我们详细介绍了CSS3中transform的各种属性值的设置以及其各自的参数，下面我们通过一个实例来看看每一种属性值的使用，主要是我们在下面的菜单中的a:hover中分别使用不同的transform的设置，换句话说，当你移动到链接上时，相应的每一个菜单项有不同的变化，因为我们在每个菜单中使用了transform。<br>从效果图上我们可以清楚的看到菜单上我们分别对应的是transform中的Translate、TranslateX、TranslateY、Rotate、Scale、ScaleX、ScaleY、Skew、SkewX、SkewY和Matrix.<br>效果：<br><img src="/image/20151007css动画/transform.png" style="margin-top:20px;"><br><a href="http://codepen.io/shanruo/pen/XmRPgr" target="_blank" rel="external">demo</a></p>
+<h2 id="转换（transition）"><a href="#转换（transition）" class="headerlink" title="转换（transition）"></a>转换（transition）</h2><p>W3C标准中对css3的transition这是样描述的：“css的transition允许css的属性值在一定的时间区间内平滑地过渡。这种效果可以在鼠标单击、获得焦点、被点击或对元素任何改变中触发，并圆滑地以动画效果改变CSS的属性值。”<br>下面我们同样从其最语法和属性值开始一步一步来学习transition的具体使用:<br>语法：</p>
 <pre><code>
 transition ： [<'transition-property'> || <'transition-duration'> || <'transition-timing-function'> || <'transition-delay'> [, [<'transition-property'> || <'transition-duration'> || <'transition-timing-function'> || <'transition-delay'>]]*
 </'transition-delay'></'transition-timing-function'></'transition-duration'></'transition-property'></'transition-delay'></'transition-timing-function'></'transition-duration'></'transition-property'></code></pre>
@@ -166,14 +261,14 @@ transition-property ： none | all | [ IDENT ] [ ',' IDENT ]*
 <p><pre><code><br>transition-timing-function ： ease | linear | ease-in | ease-out | ease-in-out | cubic-bezier(number, number, number, number) [, ease | linear | ease-in | ease-out | ease-in-out | cubic-bezier(number, number, number, number)]*<br></code></pre><br>取值：<br>transition-timing-function的值允许你根据时间的推进去改变属性值的变换速率，transition-timing-function有6个可能值：<br>1、ease：（逐渐变慢）默认值，ease函数等同于贝塞尔曲线(0.25, 0.1, 0.25, 1.0).<br>2、linear：（匀速），linear 函数等同于贝塞尔曲线(0.0, 0.0, 1.0, 1.0).<br>3、ease-in：(加速)，ease-in 函数等同于贝塞尔曲线(0.42, 0, 1.0, 1.0).<br>4、ease-out：（减速），ease-out 函数等同于贝塞尔曲线(0, 0, 0.58, 1.0).<br>5、ease-in-out：（加速然后减速），ease-in-out 函数等同于贝塞尔曲线(0.42, 0, 0.58, 1.0)<br>6、cubic-bezier：（该值允许你去自定义一个时间曲线）， 特定的cubic-bezier曲线。 (x1, y1, x2, y2)四个值特定于曲线上点P1和点P2。所有值需在[0, 1]区域内，否则无效。<br>其是cubic-bezier为通过贝赛尔曲线来计算“转换”过程中的属性值，如下曲线所示，通过改变P1(x1, y1)和P2(x2, y2)的坐标可以改变整个过程的Output Percentage。初始默认值为default.</p>
 <div><img src="/image/20151007css动画/cubic-bezier.png" style="margin-left:20%;margin-top:20px;"></div><br>其他几个属性的示意图：<br><div><img src="/image/20151007css动画/transitionline.png" style="margin-left:13%;margin-top:20px;"></div><br>四、transition-delay:<br>语法：<br><pre><code><br>transition-delay ： time [, time]*<br></code></pre><br>transition-delay是用来指定一个动画开始执行的时间，也就是说当改变元素属性值后多长时间开始执行transition效果，其取值：<time>为数值，单位为s（秒）或者ms(毫秒)，其使用和transition-duration极其相似，也可以作用于所有元素，包括:before和:after伪元素。 默认大小是”0”，也就是变换立即执行，没有延迟。<br>有时我们不只改变一个css效果的属性,而是想改变两个或者多个css属性的transition效果，那么我们只要把几个transition的声明串在一起，用逗号（“，”）隔开，然后各自可以有各自不同的延续时间和其时间的速率变换方式。但需要值得注意的一点：transition-delay与transition-duration的值都是时间，所以要区分它们在连写中的位置，一般浏览器会根据先后顺序决定，第一个可以解析为时间的怭值为transition-duration第二个为transition-delay。如：<br><pre><code><br>a {<br>    -moz-transition: background 0.5s ease-in,color 0.3s ease-out;<br>    -webkit-transition: background 0.5s ease-in,color 0.3s ease-out;<br>    -o-transition: background 0.5s ease-in,color 0.3s ease-out;<br>    transition: background 0.5s ease-in,color 0.3s ease-out;<br>  }<br></code></pre><br>如果你想给元素执行所有transition效果的属性，那么我们还可以利用all属性值来操作，此时他们共享同样的延续时间以及速率变换方式，如：<br><pre><code><br>a {<br>    -moz-transition: all 0.5s ease-in;<br>    -webkit-transition: all 0.5s ease-in;<br>    -o-transition: all 0.5s ease-in;<br>    transition: all 0.5s ease-in;<br>  }<br></code></pre><br>综合上述我们可以给transition一个速记法：transition: <property> <duration> <animation type=""> <delay>如下图所示：<br><div><img src="/image/20151007css动画/transitionmemory.png" style="margin-left:20%;margin-top:20px;"></div>
 
-<h3 id="实例-1">实例</h3><p>通过上面，我想大家对CSS3的Transition属性的使用有一定的概念存在了，下面为了加强大家在这方面的使用，我们一起来看下面的DEMO。我们通过实践来巩固前面的理论知识，也通过实践来加强transition的记忆。<br>我们主要是在一个div中放置了几个小块，分别是对应了transition-timing-function中的几种类型，我们在div的hover状态下，改变其部分属性，从而达到一种动画效果。我们也可以使用jq来点击一个按钮，触发这个div（说简单点就是通过按钮的点击事件给这个div加上一个class，让其子元素都触发相对应的transition动画效果）。<br><a href="http://codepen.io/shanruo/pen/NGjLBE" target="_blank" rel="external">DEMO</a></p>
-<h2 id="动画（animation）">动画（animation）</h2><p>在开始介绍Animation之前我们有必要先来了解一个特殊的东西，那就是”Keyframes”,我们把他叫做“关键帧”，玩过flash的朋友可能对这个东西并不会陌生。下面我们就一起来看看这个“Keyframes”是什么东西。前面我们在使用transition制作一个简单的transition效果时，我们包括了初始属性和最终属性，一个开始执行动作时间和一个延续动作时间以及动作的变换速率，其实这些值都是一个中间值，如果我们要控制的更细一些，比如说我要第一个时间段执行什么动作，第二个时间段执行什么动作（换到flash中说，就是第一帧我要执行什么动作，第二帧我要执行什么动作），这样我们用Transition就很难实现了，此时我们也需要这样的一个“关键帧”来控制。那么CSS3的Animation就是由“keyframes”这个属性来实现这样的效果。下面我们一起先来看看Keyframes:</p>
+<h3 id="实例-1"><a href="#实例-1" class="headerlink" title="实例"></a>实例</h3><p>通过上面，我想大家对CSS3的Transition属性的使用有一定的概念存在了，下面为了加强大家在这方面的使用，我们一起来看下面的DEMO。我们通过实践来巩固前面的理论知识，也通过实践来加强transition的记忆。<br>我们主要是在一个div中放置了几个小块，分别是对应了transition-timing-function中的几种类型，我们在div的hover状态下，改变其部分属性，从而达到一种动画效果。我们也可以使用jq来点击一个按钮，触发这个div（说简单点就是通过按钮的点击事件给这个div加上一个class，让其子元素都触发相对应的transition动画效果）。<br><a href="http://codepen.io/shanruo/pen/NGjLBE" target="_blank" rel="external">DEMO</a></p>
+<h2 id="动画（animation）"><a href="#动画（animation）" class="headerlink" title="动画（animation）"></a>动画（animation）</h2><p>在开始介绍Animation之前我们有必要先来了解一个特殊的东西，那就是”Keyframes”,我们把他叫做“关键帧”，玩过flash的朋友可能对这个东西并不会陌生。下面我们就一起来看看这个“Keyframes”是什么东西。前面我们在使用transition制作一个简单的transition效果时，我们包括了初始属性和最终属性，一个开始执行动作时间和一个延续动作时间以及动作的变换速率，其实这些值都是一个中间值，如果我们要控制的更细一些，比如说我要第一个时间段执行什么动作，第二个时间段执行什么动作（换到flash中说，就是第一帧我要执行什么动作，第二帧我要执行什么动作），这样我们用Transition就很难实现了，此时我们也需要这样的一个“关键帧”来控制。那么CSS3的Animation就是由“keyframes”这个属性来实现这样的效果。下面我们一起先来看看Keyframes:</p>
 <p>Keyframes具有其自己的语法规则，他的命名是由”@keyframes”开头，后面紧接着是这个“动画的名称”加上一对花括号“{}”，括号中就是一些不同时间段样式规则，有点像我们css的样式写法一样。对于一个”@keyframes”中的样式规则是由多个百分比构成的，如“0%”到”100%”之间，我们可以在这个规则中创建多个百分比，我们分别给每一个百分比中给需要有动画效果的元素加上不同的属性，从而让元素达到一种在不断变化的效果，比如说移动，改变元素颜色，位置，大小，形状等，不过有一点需要注意的是，我们可以使用“fromt”“to”来代表一个动画是从哪开始，到哪结束，也就是说这个 “from”就相当于”0%”而”to”相当于”100%”,值得一说的是，其中”0%”不能像别的属性取值一样把百分比符号省略，我们在这里必须加上百分符号（“%”）如果没有加上的话，我们这个keyframes是无效的，不起任何作用。因为keyframes的单位只接受百分比值。<br>Keyframes可以指定任何顺序排列来决定Animation动画变化的关键位置。其具体语法规则如下：</p>
 <p><pre><code><br>keyframes-rule: ‘@keyframes’ IDENT ‘{‘ keyframes-blocks ‘}’;<br> keyframes-blocks: [ keyframe-selectors block ]<em> ;<br> keyframe-selectors: [ ‘from’ | ‘to’ | PERCENTAGE ] [ ‘,’ [ ‘from’ | ‘to’ | PERCENTAGE ] ]</em>;<br></code></pre><br>我们把上面的语法综合起来：</p>
 <p><pre><code><br>@keyframes IDENT {<br>     from {<br>       Properties:Properties value;<br>     }<br>     Percentage {<br>       Properties:Properties value;<br>     }<br>     to {<br>       Properties:Properties value;<br>     }<br>   }<br>   或者全部写成百分比的形式：<br>   @keyframes IDENT {<br>      0% {<br>         Properties:Properties value;<br>      }<br>      Percentage {<br>         Properties:Properties value;<br>      }<br>      100% {<br>         Properties:Properties value;<br>      }<br>    }<br></code></pre><br>其中IDENT是一个动画名称，你可以随便取，当然语义化一点更好，Percentage是百分比值，我们可以添加许多个这样的百分比，Properties为css的属性名，比如说left,background等，value就是相对应的属性的属性值。值得一提的是，我们from和to 分别对应的是0%和100%。这个我们在前面也提到过了。到目前为止支技animation动画的只有webkit内核的浏览器，所以我需要在上面的基础上加上-webkit前缀，据说Firefox5可以支持css3的 animation动画属性。<br>我们来看一个W3C官网的实例:</p>
 <p><pre><code><br>@-webkit-keyframes ‘wobble’ {<br>     0% {<br>        margin-left: 100px;<br>        background: green;<br>     }<br>     40% {<br>        margin-left: 150px;<br>        background: orange;<br>     }<br>     60% {<br>        margin-left: 75px;<br>        background: blue;<br>     }<br>     100% {<br>        margin-left: 100px;<br>        background: red;<br>     }<br>  }<br></code></pre><br>这里我们定义了一个叫“wobble”的动画，他的动画是从0%开始到100%时结束，从中还经历了一个40%和60%两个过程，上面代码具体意思是：wobble动画在0%时元素定位到left为100px的位置背景色为green，然后40%时元素过渡到left为150px的位置并且背景色为orange，60%时元素过渡到left为75px的位置,背景色为blue，最后100%结束动画的位置元素又回到起点left为100px处,背景色变成red。<br>Keyframes定义好了以后，我们需要怎么去调用刚才定义好的动画“wobble”:<br>CSS3的animation类似于transition属性，他们都是随着时间改变元素的属性值。他们主要区别是transition需要触发一个事件(hover事件或click事件等)才会随时间改变其css属性；而animation在不需要触发任何事件的情况下也可以显式的随着时间变化来改变元素css的属性值，从而达到一种动画的效果。这样我们就可以直接在一个元素中调用animation的动画属性,基于这一点，css3的animation就需要明确的动画属性值，这也就是回到我们上面所说的，我们需要keyframes来定义不同时间的css属性值,达到元素在不同时间段变化的效果。<br>下面我们来看看怎么给一个元素调用animation属性:</p>
 <p><pre><code><br>.demo1 {<br>     width: 50px;<br>     height: 50px;<br>     margin-left: 100px;<br>     background: blue;<br>     -webkit-animation-name:’wobble’;/<em>动画属性名，也就是我们前面keyframes定义的动画名</em>/<br>     -webkit-animation-duration: 10s;/<em>动画持续时间</em>/<br>     -webkit-animation-timing-function: ease-in-out; /<em>动画频率，和transition-timing-function是一样的</em>/<br>     -webkit-animation-delay: 2s;/<em>动画延迟时间</em>/<br>     -webkit-animation-iteration-count: 10;/<em>定义循环资料，infinite为无限次</em>/<br>     -webkit-animation-direction: alternate;/<em>定义动画方式</em>/<br>  }<br></code></pre><br>CSS Animation动画效果将会影响元素相对应的css值，在整个动画过程中，元素的变化属性值完全是由animation来控制，动画后面的会覆盖前面的属性值。如上面例子：因为我们这个demo只是在不同的时间段改变了demo1的背景色和左边距，其默认值是：margin-left:100px;background: blue；但当我们在执行动画0%时，margin-left:100px,background:green；当执行到40%时，属性变成了：margin-left:150px;background:orange;当执行到60%时margin-left:75px;background:blue;当动画 执行到100%时：margin-left:100px;background: red;此时动画将完成，那么margin-left和background两个属性值将是以100%时的为主,他不会产生叠加效果，只是一次一次覆盖前一次出将的css属性。就如我们平时的css一样，最后出现的权根是最大的。当动画结束后，样式回到默认效果。</p>
-<h3 id="实例-2">实例</h3><p>下面我们一起来看两个实例制作过程，来加强对animation的实践能力。</p>
+<h3 id="实例-2"><a href="#实例-2" class="headerlink" title="实例"></a>实例</h3><p>下面我们一起来看两个实例制作过程，来加强对animation的实践能力。</p>
 <p>我们这个demo主要是通过在keyframes中改变元素的background;color;box-shadow三个属性，来达到一种发光变色的button效果。<br><a href="http://codepen.io/shanruo/pen/YyVObE" target="_blank" rel="external">DEMO一</a></p>
 <p>DEMO二是通过transform的rotate和border-radius不同值，把一个方型图片随着时间的推移，慢慢的转换成了个圆型效果，下面我们来看看其具体实现的效果。<br><a href="http://codepen.io/shanruo/pen/pjPOMz" target="_blank" rel="external">DEMO二</a></p>
 </delay></animation></duration></property></time>
@@ -232,14 +327,14 @@ transition-property ： none | all | [ IDENT ] [ ',' IDENT ]*
     </header>
     <div class="entry">
       
-        <h2 id="用例">用例</h2><ul>
+        <h2 id="用例"><a href="#用例" class="headerlink" title="用例"></a>用例</h2><ul>
 <li>用户通过浏览器可以使用该应用</li>
 <li>当用户请求<span><a href="http://domain/start" target="_blank" rel="external">http://domain/start</a></span>时，可以看到一个欢迎页面，页面上有一个文件上传的表单</li>
 <li>用户可以选择一个图片并提交表单，随后文件将被上传到<span><a href="http://domain/upload" target="_blank" rel="external">http://domain/upload</a></span>，该页面完成上传后会把图片显示在页面上</li>
 </ul>
 <p>在完成这一目标的过程中，我们不仅仅需要基础的代码而不管代码是否优雅。我们还要对此进行抽象，来寻找一种适合构建更为复杂的Node.js应用的方式。</p>
 
-<h2 id="应用不同模块分析">应用不同模块分析</h2><ul>
+<h2 id="应用不同模块分析"><a href="#应用不同模块分析" class="headerlink" title="应用不同模块分析"></a>应用不同模块分析</h2><ul>
 <li>我们需要提供Web页面，因此需要一个HTTP服务器</li>
 <li>对于不同的请求，根据请求的URL，我们的服务器需要给予不同的响应，因此我们需要一个路由，用于把请求对应到请求处理程序（request handler）</li>
 <li>当请求被服务器接收并通过路由传递之后，需要可以对其进行处理，因此我们需要最终的请求处理程序</li>
@@ -249,15 +344,15 @@ transition-property ： none | all | [ IDENT ] [ ',' IDENT ]*
 </ul>
 <p>现在我们就来开始实现之路，先从第一个部分–HTTP服务器着手。</p>
 
-<h2 id="构建应用的模块">构建应用的模块</h2><h3 id="HTTP服务器">HTTP服务器</h3><p>当我准备开始写我的第一个“真正的”Node.js应用的时候，我不但不知道怎么写Node.js代码，也不知道怎么组织这些代码。我应该把所有东西都放进一个文件里吗？网上有很多教程都会教你把所有的逻辑都放进一个用Node.js写的基础HTTP服务器里。但是如果我想加入更多的内容，同时还想保持代码的可读性呢？<br>实际上，只要把不同功能的代码放入不同的模块中，保持代码分离还是相当简单的。这种方法允许你拥有一个干净的主文件（main file），你可以用Node.js执行它；同时你可以拥有干净的模块，它们可以被主文件和其他的模块调用。<br>那么，现在我们来创建一个用于启动我们的应用的主文件，和一个保存着我们的HTTP服务器代码的模块。在我的印象里，把主文件叫做index.js或多或少是个标准格式。把服务器模块放进叫server.js的文件里则很好理解。<br>让我们先从服务器模块开始。在你的项目的根目录下创建一个叫server.js的文件，并写入以下代码:</p>
+<h2 id="构建应用的模块"><a href="#构建应用的模块" class="headerlink" title="构建应用的模块"></a>构建应用的模块</h2><h3 id="HTTP服务器"><a href="#HTTP服务器" class="headerlink" title="HTTP服务器"></a>HTTP服务器</h3><p>当我准备开始写我的第一个“真正的”Node.js应用的时候，我不但不知道怎么写Node.js代码，也不知道怎么组织这些代码。我应该把所有东西都放进一个文件里吗？网上有很多教程都会教你把所有的逻辑都放进一个用Node.js写的基础HTTP服务器里。但是如果我想加入更多的内容，同时还想保持代码的可读性呢？<br>实际上，只要把不同功能的代码放入不同的模块中，保持代码分离还是相当简单的。这种方法允许你拥有一个干净的主文件（main file），你可以用Node.js执行它；同时你可以拥有干净的模块，它们可以被主文件和其他的模块调用。<br>那么，现在我们来创建一个用于启动我们的应用的主文件，和一个保存着我们的HTTP服务器代码的模块。在我的印象里，把主文件叫做index.js或多或少是个标准格式。把服务器模块放进叫server.js的文件里则很好理解。<br>让我们先从服务器模块开始。在你的项目的根目录下创建一个叫server.js的文件，并写入以下代码:</p>
 <p><pre><code><br>var http = require(“http”);<br>var url = require(“url”);<br>function start(route, handle) {<br>    function onRequest(request, response) {<br>        var pathname = url.parse(request.url).pathname;<br>        console.log(“Request for “ + pathname + “ received.”);<br>        route(handle, pathname, response, request);<br>    }<br>    http.createServer(onRequest).listen(8888);<br>    console.log(“Server has started.”);<br>}<br>exports.start = start;<br></code></pre></p>
-<h3 id="服务端的模块放在哪里">服务端的模块放在哪里</h3><p>我们现在可以回到我们如何组织应用这个问题上了。我们现在在 server.js 文件中有一个非常基础的HTTP服务器代码，而且我提到通常我们会有一个叫 index.js 的文件去调用应用的其他模块（比如 server.js 中的HTTP服务器模块）来引导和启动应用。我们现在就来谈谈怎么把server.js变成一个真正的Node.js模块，使它可以被我们（还没动工）的 index.js 主文件使用。</p><p>我们现在就可以创建我们的主文件 index.js 并在其中启动我们的HTTP了，虽然服务器的代码还在 server.js 中。创建 index.js 文件并写入以下内容：</p>
+<h3 id="服务端的模块放在哪里"><a href="#服务端的模块放在哪里" class="headerlink" title="服务端的模块放在哪里"></a>服务端的模块放在哪里</h3><p>我们现在可以回到我们如何组织应用这个问题上了。我们现在在 server.js 文件中有一个非常基础的HTTP服务器代码，而且我提到通常我们会有一个叫 index.js 的文件去调用应用的其他模块（比如 server.js 中的HTTP服务器模块）来引导和启动应用。我们现在就来谈谈怎么把server.js变成一个真正的Node.js模块，使它可以被我们（还没动工）的 index.js 主文件使用。</p><p>我们现在就可以创建我们的主文件 index.js 并在其中启动我们的HTTP了，虽然服务器的代码还在 server.js 中。创建 index.js 文件并写入以下内容：</p>
 <p><pre><code>var server = require(“./server”);<br>var router = require(“./router”);<br>var requestHandlers = require(“./requestHandlers”);<br>var handle = {};<br>handle[“/“] = requestHandlers.start;<br>handle[“/start”] = requestHandlers.start;<br>handle[“/upload”] = requestHandlers.upload;<br>handle[“/show”] = requestHandlers.show;<br>server.start(router.route, handle);<br></code></pre></p>
-<h3 id="如何来进行请求的“路由”">如何来进行请求的“路由”</h3><p>我们要为路由提供请求的URL和其他需要的GET及POST参数，随后路由需要根据这些数据来执行相应的代码（这里“代码”对应整个应用的第三部分：一系列在接收到请求时真正工作的处理程序）。<br>因此，我们需要查看HTTP请求，从中提取出请求的URL以及GET/POST参数。这一功能应当属于路由还是服务器（甚至作为一个模块自身的功能）确实值得探讨，但这里暂定其为我们的HTTP服务器的功能。<br>们需要的所有数据都会包含在request对象中，该对象作为onRequest()回调函数的第一个参数传递。但是为了解析这些数据，我们需要额外的Node.JS模块，它们分别是url和querystring模块。<br>现在我们可以来编写路由了，建立一个名为router.js的文件，添加以下内容：</p>
+<h3 id="如何来进行请求的“路由”"><a href="#如何来进行请求的“路由”" class="headerlink" title="如何来进行请求的“路由”"></a>如何来进行请求的“路由”</h3><p>我们要为路由提供请求的URL和其他需要的GET及POST参数，随后路由需要根据这些数据来执行相应的代码（这里“代码”对应整个应用的第三部分：一系列在接收到请求时真正工作的处理程序）。<br>因此，我们需要查看HTTP请求，从中提取出请求的URL以及GET/POST参数。这一功能应当属于路由还是服务器（甚至作为一个模块自身的功能）确实值得探讨，但这里暂定其为我们的HTTP服务器的功能。<br>们需要的所有数据都会包含在request对象中，该对象作为onRequest()回调函数的第一个参数传递。但是为了解析这些数据，我们需要额外的Node.JS模块，它们分别是url和querystring模块。<br>现在我们可以来编写路由了，建立一个名为router.js的文件，添加以下内容：</p>
 <p><pre><code><br>function route(handle, pathname, response, request) {<br>    console.log(“About to route a request for “ + pathname);<br>    if (typeof handle[pathname] === ‘function’) {<br>        handle<a href="response, request">pathname</a>;<br>    } else {<br>        console.log(“No request handler found for “ + pathname);<br>        response.writeHead(404, {“Content-Type”: “text/html”});<br>        response.write(“404 Not found”);<br>        response.end();<br>    }<br>}<br>exports.route = route;<br></code><pre></pre></pre></p>
-<h3 id="路由给真正的请求处理程序">路由给真正的请求处理程序</h3><p>回到正题，现在我们的HTTP服务器和请求路由模块已经如我们的期望，可以相互交流了，就像一对亲密无间的兄弟。<br>当然这还远远不够，路由，顾名思义，是指我们要针对不同的URL有不同的处理方式。例如处理/start的“业务逻辑”就应该和处理/upload的不同。<br>在现在的实现下，路由过程会在路由模块中“结束”，并且路由模块并不是真正针对请求“采取行动”的模块，否则当我们的应用程序变得更为复杂时，将无法很好地扩展。<br>我们暂时把作为路由目标的函数称为请求处理程序。现在我们不要急着来开发路由模块，因为如果请求处理程序没有就绪的话，再怎么完善路由模块也没有多大意义。<br>应用程序需要新的部件，因此加入新的模块 – 已经无需为此感到新奇了。我们来创建一个叫做requestHandlers的模块，并对于每一个请求处理程序，添加一个占位用函数，随后将这些函数作为模块的方法导出：</p>
+<h3 id="路由给真正的请求处理程序"><a href="#路由给真正的请求处理程序" class="headerlink" title="路由给真正的请求处理程序"></a>路由给真正的请求处理程序</h3><p>回到正题，现在我们的HTTP服务器和请求路由模块已经如我们的期望，可以相互交流了，就像一对亲密无间的兄弟。<br>当然这还远远不够，路由，顾名思义，是指我们要针对不同的URL有不同的处理方式。例如处理/start的“业务逻辑”就应该和处理/upload的不同。<br>在现在的实现下，路由过程会在路由模块中“结束”，并且路由模块并不是真正针对请求“采取行动”的模块，否则当我们的应用程序变得更为复杂时，将无法很好地扩展。<br>我们暂时把作为路由目标的函数称为请求处理程序。现在我们不要急着来开发路由模块，因为如果请求处理程序没有就绪的话，再怎么完善路由模块也没有多大意义。<br>应用程序需要新的部件，因此加入新的模块 – 已经无需为此感到新奇了。我们来创建一个叫做requestHandlers的模块，并对于每一个请求处理程序，添加一个占位用函数，随后将这些函数作为模块的方法导出：</p>
 <p><pre><code><br>var querystring = require(“querystring”),<br>    fs = require(“fs”),<br>    formidable = require(“formidable”);<br>function start(response) {<br>    console.log(“Request handler ‘start’ was called.”);<br>    var body = ‘&lt;html&gt;’+<br>        ‘&lt;head&gt;’+<br>        ‘&lt;meta http-equiv=”Content-Type” content=”text/html; ‘+<br>        ‘charset=UTF-8” /&gt;’+<br>        ‘&lt;/head&gt;’+<br>        ‘&lt;body&gt;’+<br>        ‘&lt;form action=”/upload” enctype=”multipart/form-data” ‘+<br>        ‘method=”post”&gt;’+<br>        ‘&lt;input type=”file” name=”upload” multiple=”multiple”&gt;’+<br>        ‘&lt;input type=”submit” value=”Upload file” /&gt;’+<br>        ‘&lt;/form&gt;’+<br>        ‘&lt;/body&gt;’+<br>        ‘&lt;/html&gt;’;<br>    response.writeHead(200, {“Content-Type”: “text/html”});<br>    response.write(body);<br>    response.end();<br>}<br>function upload(response, request) {<br>    console.log(“Request handler ‘upload’ was called.”);<br>    var form = new formidable.IncomingForm();<br>    console.log(“about to parse”);<br>    form.parse(request, function(error, fields, files) {<br>        console.log(“parsing done”);<br>        fs.renameSync(files.upload.path, “/tmp/test.png”);<br>        response.writeHead(200, {“Content-Type”: “text/html”});<br>        response.write(“received image:&lt;br/&gt;”);<br>        response.write(“&lt;img src=’/show’ /&gt;”);<br>        response.end();<br>    });<br>}<br>function show(response) {<br>    console.log(“Request handler ‘show’ was called.”);<br>    fs.readFile(“/tmp/test.png”, “binary”, function(error, file) {<br>        if(error) {<br>            response.writeHead(500, {“Content-Type”: “text/plain”});<br>            response.write(error + “\n”);<br>            response.end();<br>        } else {<br>            response.writeHead(200, {“Content-Type”: “image/png”});<br>            response.write(file, “binary”);<br>            response.end();<br>        }<br>    });<br>}<br>exports.start = start;<br>exports.upload = upload;<br>exports.show = show;<br></code></pre><br>这样我们就可以把请求处理程序和路由模块连接起来，让路由“有路可寻”。<br>好了，启动服务器，我们应用所有的功能就可以用了。选择一张本地图片，将其上传到服务器，然后浏览器就会显示该图片。</p>
-<h2 id="总结与展望">总结与展望</h2><p>恭喜，我们的任务已经完成了！我们开发完了一个Node.js的web应用，应用虽小，但却“五脏俱全”。接下来是不是对node.js越来越感兴趣了，反正我是深深的爱上了他，么么哒ლ(°◕‵ƹ′◕ლ)!</p>
+<h2 id="总结与展望"><a href="#总结与展望" class="headerlink" title="总结与展望"></a>总结与展望</h2><p>恭喜，我们的任务已经完成了！我们开发完了一个Node.js的web应用，应用虽小，但却“五脏俱全”。接下来是不是对node.js越来越感兴趣了，反正我是深深的爱上了他，么么哒ლ(°◕‵ƹ′◕ლ)!</p>
 
       
     </div>
@@ -291,23 +386,23 @@ transition-property ： none | all | [ IDENT ] [ ',' IDENT ]*
   <div class="clearfix"></div>
 </nav>
 
-<script src="/js/jquery.anystretch.min.js" type="text/javascript"></script>
-<script src="/js/cover.js" type="text/javascript"></script>
+<script src="/js/jquery.anystretch.min.js"></script>
+<script src="/js/cover.js"></script>
 
     <div class="clearfix"></div>
   </div>
   <footer id="footer" class="inner"><div>
   
-  &copy; 2015 shanruo
+  &copy; 2017 shanruo
   
 </div>
 Powered by <a href="http://zespia.tw/hexo/" title="Hexo" target="_blank" rel="external">Hexo</a> and <a href="http://pages.github.com/" title="GitHub Pages" target="_blank" rel="external">GitHub Pages</a>
 
 <div class="clearfix"></div></footer>
   
-<script src="/js/jquery.imagesloaded.min.js" type="text/javascript"></script>
-<script src="/js/gallery.js" type="text/javascript"></script>
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
 
 
 

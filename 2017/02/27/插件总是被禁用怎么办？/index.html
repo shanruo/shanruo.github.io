@@ -1,0 +1,261 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>插件总是被禁用怎么办？ | Shanruo</title>
+  <meta name="author" content="shanruo">
+  
+  <meta name="description" content="在开发chrome浏览器插件时，总是出现添加了crx扩展程序，重启浏览器就不好使了，各种被禁用，这里有两种普遍情况，一种是上传发布到了应用市场，但是很多用户要直接在应用市场下载是需要翻墙的，只能手动添加打包的crx扩展程序包，但是会被识别非chrome store扩展。
+
+一种是除chrome we">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="插件总是被禁用怎么办？"/>
+  <meta property="og:site_name" content="Shanruo"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Shanruo" type="application/atom+xml">
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+<link rel="stylesheet" href="/css/style.css">
+  <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-368771XX-X']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</head>
+
+<body>
+  <header id="header" class='normal_mode'>
+    <nav id="main-nav">
+  <ul class='container'>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+  </header>
+  <div id="content" class="container">
+    <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2017-02-27T09:43:13.000Z"><a href="/2017/02/27/插件总是被禁用怎么办？/">Mon, Feb 27 2017, 5:43:13 pm</a></time>
+
+  
+    <h1 class="title">插件总是被禁用怎么办？</h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <p>在开发chrome浏览器插件时，总是出现添加了crx扩展程序，重启浏览器就不好使了，各种被禁用，这里有两种普遍情况，一种是上传发布到了应用市场，但是很多用户要直接在应用市场下载是需要翻墙的，只能手动添加打包的crx扩展程序包，但是会被识别非chrome store扩展。</p>
+<p><img src="/image/20170227plugin/plugin01.png"></p>
+<p>一种是除chrome web store下载的所有第三方扩展，Chrome的新策略里面都禁用了，导致很多插件都没法用，这里给大家就这两种通用情况介绍下解决方案。</p>
+<h1 id="已发布chrome应用商店"><a href="#已发布chrome应用商店" class="headerlink" title="已发布chrome应用商店"></a>已发布chrome应用商店</h1><p>针对，已经上传发布的插件应用，用户直接通过chrome网上应用商店需要翻墙。</p>
+<p><img src="/image/20170227plugin/plugin02.png"></p>
+<p>这就无形之间提升了插件使用的门槛，所以这里主要解决如何提供给用户一个可用又不被禁用的方案。</p>
+<p>如果只是单纯的通过浏览器的打包功能打包的crx包文件添加安装，依然会被识别为非chrome store的第三方插件，自然会被禁用，一旦重启浏览器，就用不了。</p>
+<p>因此，一定要提供给用户的是从应用商店上下载下来的crx文件，这样就肯定妥妥的没问题。下载方法也很简单，下载地址：<a href="http://chrome-extension-downloader.com/" target="_blank" rel="external">http://chrome-extension-downloader.com/</a><br>这里需要输入要下载的插件的ID，也就是唯一标示。</p>
+<p><img src="/image/20170227plugin/plugin03.png"></p>
+<p><img src="/image/20170227plugin/plugin04.png"></p>
+<p>好了，这样就妥妥的下载了，可以正常使用不被禁用的插件包了，然后再上传到dcms，生成一个下载连接地址，这样就可以对外开放了。</p>
+<h1 id="非chrome-store的第三方插件"><a href="#非chrome-store的第三方插件" class="headerlink" title="非chrome store的第三方插件"></a>非chrome store的第三方插件</h1><p>谷歌在2012年Chrome V21+开始禁止第三方扩展静默安装，2014年Chrome V30+开始任何非Chrome 网上应用店(Chrome WebStore)下载的扩展将自动停用。如果自己折腾一个Chrome插件crx打包之后拖进chrome://extensions安装启用一会儿就会被安静的自动停用，自己弄个插件在自己的Chrome浏览器上正常安装&amp;测试都不能够。提交Chrome WebStore审核需要一次性付费5美元，用于验证开发者账户。插件发布审查周期需要等1-3个工作日，更新个插件也要等半小时。一个开发者帐号限制发布最多20个扩展。世界这么大，钱不是问题，可能更想自由些。那么如何解决Chrome浏览器安装任意第三方扩展程序都自动停用的问题呢？</p>
+<h2 id="Chrome浏览器扩展程序内置的保护机制"><a href="#Chrome浏览器扩展程序内置的保护机制" class="headerlink" title="Chrome浏览器扩展程序内置的保护机制"></a>Chrome浏览器扩展程序内置的保护机制</h2><p>Chrome内置浏览器安全&amp;隐私保护机制，允许本地用户自定义配置扩展程序相关的安全策略。比如：用户不能安装任何已被列入黑名单的扩展程序（除非它们被加入白名单）。当然也可以通过在ExtensionInstallForcelist中指定扩展程序来强制Google Chrome自动安装这些扩展程序。强制安装列表中的扩展程序均会被安装（无论它们是否包含在黑名单内）。</p>
+<ul>
+<li>扩展程序安装黑名单(ExtensionInstallBlacklist)</li>
+<li>扩展程序安装白名单(ExtensionInstallWhitelist)</li>
+<li>强制安装的扩展程序的列表(ExtensionInstallForcelist)</li>
+<li>扩展程序、应用和用户脚本安装源(ExtensionInstallSources)</li>
+<li>允许的应用/扩展程序类型(ExtensionAllowedTypes)</li>
+<li>Ps:优先级&amp;适用范围依次往下逐级递增。</li>
+</ul>
+<h2 id="方法一：添加指定扩展程序到Chrome白名单"><a href="#方法一：添加指定扩展程序到Chrome白名单" class="headerlink" title="方法一：添加指定扩展程序到Chrome白名单"></a>方法一：添加指定扩展程序到Chrome白名单</h2><p>通过配置扩展程序安装白名单(ExtensionInstallWhitelist)很简单就可以覆盖内置的扩展安装策略，从而正常安装启用指定第三方扩展程序。</p>
+<ul>
+<li>打开chrome://extensions（扩展程序管理器）页面，拖放xxx.crx上来</li>
+<li>按照提示确认安装</li>
+<li>提取拓展插件的ID</li>
+<li>找到被禁用的扩展，记下ID（设白名单用）</li>
+<li>添加指定扩展程序到白名单</li>
+</ul>
+<h2 id="方法二：使用组策略管理模版"><a href="#方法二：使用组策略管理模版" class="headerlink" title="方法二：使用组策略管理模版"></a>方法二：使用组策略管理模版</h2><p>通过组策略Chrome管理模版，轻松配置Chrome浏览器众多的隐藏内置选项，更高效的使用Chrome，是官方推荐的最简便、可扩展调整的最佳方法。</p>
+<ul>
+<li>首先下载管理模版并解压到硬盘任意可正常读写访问的地方。</li>
+<li>打开运行程序对话框输入：gpedit.msc 打开本地组策略编辑器，在 管理模版 上右键单击添加对应操作系统当前语言的管理模块，这里我们选择zh-CN中chrome.adm安装即可</li>
+<li>再展开 计算机配置 -&gt; 管理模板 -&gt; 经典管理模版(ADM) -&gt; Google -&gt; Google Chrome -&gt; 扩展程序</li>
+<li>右侧双击打开“配置扩展程序安装白名单” -&gt; 选中“已启用”，点击“显示…” 双击列表中值这一列输入希望安装的第三方扩展程序的唯一ID 确定保存 -&gt; 点击应用 确定，然后退出整个本地组策略编辑器，无需重启Chrome浏览器，只需要重新打开扩展程序管理器就可以直接启用被禁的第三方扩展插件。</li>
+</ul>
+<p>Tips:嫌逐一的为拓展添加白名单麻烦，配置扩展程序、应用和用户脚本安装源 状态为启用 值为：<all_urls> 应用保存即可。值得一提的是Chrome组策略管理模版里头带了很多高大上的设置，请根据相应的配置提示自行挖掘尝试。</all_urls></p>
+<p>如何检查配置的政策是否正确有效？：打开chrome://policy查看相应的策略的状态是否为确定即可。</p>
+<p>关于管理策略模板来源以及更具体的使用情况可以访问Chromium官网<a href="http://www.chromium.org/administrators/policy-templates" target="_blank" rel="external">获取更多</a></p>
+
+      
+    </div>
+    <footer>
+      
+          
+<!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <span class="jiathis_txt">分享到：</span>
+  <a class="jiathis_button_weixin">微信</a>
+  <a class="jiathis_button_tsina">新浪微博</a>
+  <a class="jiathis_button_renren">人人网</a>
+  <a class="jiathis_button_qzone">QQ空间</a>
+  <a class="jiathis_button_douban">豆瓣</a>
+  <a class="jiathis_button_pocket">Pocket</a>
+  <a href="http://www.jiathis.com/share?uid=901656" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code_mini/jia.js?uid=901656" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+          <div class="clearfix"></div>
+          <nav id="pagination">
+  
+  
+    <a href="/2015/10/07/css动画/" class="alignright next">Prev<i class="fa fa-long-arrow-right"></i></a>
+  
+  <div class="clearfix"></div>
+</nav>
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">Kommentare</h1>
+
+  
+      <!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-thread-key="/2017/02/27/插件总是被禁用怎么办？/"></div>
+<!-- Duoshuo Comment END -->
+  
+</section>
+
+
+
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div>
+  
+  &copy; 2017 shanruo
+  
+</div>
+Powered by <a href="http://zespia.tw/hexo/" title="Hexo" target="_blank" rel="external">Hexo</a> and <a href="http://pages.github.com/" title="GitHub Pages" target="_blank" rel="external">GitHub Pages</a>
+
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
+
+
+
+    <script type="text/javascript">
+        (function(){
+
+            $(window).scroll(function(){
+
+                var scrollTop = $(window).scrollTop();
+                if ( scrollTop >200 ){
+                    $("#main-nav").removeClass('normal_mode').addClass('top_mode');
+                } else{
+                    $("#main-nav").removeClass('top_mode').addClass('normal_mode');
+                }
+
+            });
+
+        })();
+    </script>
+
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript">
+  (function($){
+    $('.fancybox').fancybox({
+      'titlePosition': 'inside'
+    });
+  })(jQuery);
+  </script>
+
+
+
+    
+    <script type="text/javascript">
+      var duoshuoQuery = {short_name:"shanruo"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+
+
+<script type="text/javascript">
+  
+  $(function(){
+
+    $('.title').hover(
+      function() {      
+        $(this).stop().animate(
+          {'marginLeft': '10px'}, 200
+        );   
+      }, 
+      function() {       
+        $(this).stop().animate({'marginLeft': '0px'}, 200);      
+      
+    });   
+
+  });
+
+</script>
+
+
+</body>
+</html>

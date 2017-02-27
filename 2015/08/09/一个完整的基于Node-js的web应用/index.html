@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>一个完整的基于Node.js的web应用 | shanruo</title>
+  <title>一个完整的基于Node.js的web应用 | Shanruo</title>
   <meta name="author" content="shanruo">
   
   <meta name="description" content="用例
@@ -17,17 +17,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   <meta property="og:title" content="一个完整的基于Node.js的web应用"/>
-  <meta property="og:site_name" content="shanruo"/>
+  <meta property="og:site_name" content="Shanruo"/>
 
   
     <meta property="og:image" content="undefined"/>
   
 
   <link href="/favicon.ico" rel="icon">
-  <link rel="alternate" href="/atom.xml" title="shanruo" type="application/atom+xml">
-  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" type="text/css">
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" type="text/css">
-<link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="alternate" href="/atom.xml" title="Shanruo" type="application/atom+xml">
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+<link rel="stylesheet" href="/css/style.css">
   <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
   <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
   
@@ -89,14 +89,14 @@
     </header>
     <div class="entry">
       
-        <h2 id="用例">用例</h2><ul>
+        <h2 id="用例"><a href="#用例" class="headerlink" title="用例"></a>用例</h2><ul>
 <li>用户通过浏览器可以使用该应用</li>
 <li>当用户请求<span><a href="http://domain/start" target="_blank" rel="external">http://domain/start</a></span>时，可以看到一个欢迎页面，页面上有一个文件上传的表单</li>
 <li>用户可以选择一个图片并提交表单，随后文件将被上传到<span><a href="http://domain/upload" target="_blank" rel="external">http://domain/upload</a></span>，该页面完成上传后会把图片显示在页面上</li>
 </ul>
 <p>在完成这一目标的过程中，我们不仅仅需要基础的代码而不管代码是否优雅。我们还要对此进行抽象，来寻找一种适合构建更为复杂的Node.js应用的方式。</p>
 
-<h2 id="应用不同模块分析">应用不同模块分析</h2><ul>
+<h2 id="应用不同模块分析"><a href="#应用不同模块分析" class="headerlink" title="应用不同模块分析"></a>应用不同模块分析</h2><ul>
 <li>我们需要提供Web页面，因此需要一个HTTP服务器</li>
 <li>对于不同的请求，根据请求的URL，我们的服务器需要给予不同的响应，因此我们需要一个路由，用于把请求对应到请求处理程序（request handler）</li>
 <li>当请求被服务器接收并通过路由传递之后，需要可以对其进行处理，因此我们需要最终的请求处理程序</li>
@@ -106,15 +106,15 @@
 </ul>
 <p>现在我们就来开始实现之路，先从第一个部分–HTTP服务器着手。</p>
 
-<h2 id="构建应用的模块">构建应用的模块</h2><h3 id="HTTP服务器">HTTP服务器</h3><p>当我准备开始写我的第一个“真正的”Node.js应用的时候，我不但不知道怎么写Node.js代码，也不知道怎么组织这些代码。我应该把所有东西都放进一个文件里吗？网上有很多教程都会教你把所有的逻辑都放进一个用Node.js写的基础HTTP服务器里。但是如果我想加入更多的内容，同时还想保持代码的可读性呢？<br>实际上，只要把不同功能的代码放入不同的模块中，保持代码分离还是相当简单的。这种方法允许你拥有一个干净的主文件（main file），你可以用Node.js执行它；同时你可以拥有干净的模块，它们可以被主文件和其他的模块调用。<br>那么，现在我们来创建一个用于启动我们的应用的主文件，和一个保存着我们的HTTP服务器代码的模块。在我的印象里，把主文件叫做index.js或多或少是个标准格式。把服务器模块放进叫server.js的文件里则很好理解。<br>让我们先从服务器模块开始。在你的项目的根目录下创建一个叫server.js的文件，并写入以下代码:</p>
+<h2 id="构建应用的模块"><a href="#构建应用的模块" class="headerlink" title="构建应用的模块"></a>构建应用的模块</h2><h3 id="HTTP服务器"><a href="#HTTP服务器" class="headerlink" title="HTTP服务器"></a>HTTP服务器</h3><p>当我准备开始写我的第一个“真正的”Node.js应用的时候，我不但不知道怎么写Node.js代码，也不知道怎么组织这些代码。我应该把所有东西都放进一个文件里吗？网上有很多教程都会教你把所有的逻辑都放进一个用Node.js写的基础HTTP服务器里。但是如果我想加入更多的内容，同时还想保持代码的可读性呢？<br>实际上，只要把不同功能的代码放入不同的模块中，保持代码分离还是相当简单的。这种方法允许你拥有一个干净的主文件（main file），你可以用Node.js执行它；同时你可以拥有干净的模块，它们可以被主文件和其他的模块调用。<br>那么，现在我们来创建一个用于启动我们的应用的主文件，和一个保存着我们的HTTP服务器代码的模块。在我的印象里，把主文件叫做index.js或多或少是个标准格式。把服务器模块放进叫server.js的文件里则很好理解。<br>让我们先从服务器模块开始。在你的项目的根目录下创建一个叫server.js的文件，并写入以下代码:</p>
 <p><pre><code><br>var http = require(“http”);<br>var url = require(“url”);<br>function start(route, handle) {<br>    function onRequest(request, response) {<br>        var pathname = url.parse(request.url).pathname;<br>        console.log(“Request for “ + pathname + “ received.”);<br>        route(handle, pathname, response, request);<br>    }<br>    http.createServer(onRequest).listen(8888);<br>    console.log(“Server has started.”);<br>}<br>exports.start = start;<br></code></pre></p>
-<h3 id="服务端的模块放在哪里">服务端的模块放在哪里</h3><p>我们现在可以回到我们如何组织应用这个问题上了。我们现在在 server.js 文件中有一个非常基础的HTTP服务器代码，而且我提到通常我们会有一个叫 index.js 的文件去调用应用的其他模块（比如 server.js 中的HTTP服务器模块）来引导和启动应用。我们现在就来谈谈怎么把server.js变成一个真正的Node.js模块，使它可以被我们（还没动工）的 index.js 主文件使用。</p><p>我们现在就可以创建我们的主文件 index.js 并在其中启动我们的HTTP了，虽然服务器的代码还在 server.js 中。创建 index.js 文件并写入以下内容：</p>
+<h3 id="服务端的模块放在哪里"><a href="#服务端的模块放在哪里" class="headerlink" title="服务端的模块放在哪里"></a>服务端的模块放在哪里</h3><p>我们现在可以回到我们如何组织应用这个问题上了。我们现在在 server.js 文件中有一个非常基础的HTTP服务器代码，而且我提到通常我们会有一个叫 index.js 的文件去调用应用的其他模块（比如 server.js 中的HTTP服务器模块）来引导和启动应用。我们现在就来谈谈怎么把server.js变成一个真正的Node.js模块，使它可以被我们（还没动工）的 index.js 主文件使用。</p><p>我们现在就可以创建我们的主文件 index.js 并在其中启动我们的HTTP了，虽然服务器的代码还在 server.js 中。创建 index.js 文件并写入以下内容：</p>
 <p><pre><code>var server = require(“./server”);<br>var router = require(“./router”);<br>var requestHandlers = require(“./requestHandlers”);<br>var handle = {};<br>handle[“/“] = requestHandlers.start;<br>handle[“/start”] = requestHandlers.start;<br>handle[“/upload”] = requestHandlers.upload;<br>handle[“/show”] = requestHandlers.show;<br>server.start(router.route, handle);<br></code></pre></p>
-<h3 id="如何来进行请求的“路由”">如何来进行请求的“路由”</h3><p>我们要为路由提供请求的URL和其他需要的GET及POST参数，随后路由需要根据这些数据来执行相应的代码（这里“代码”对应整个应用的第三部分：一系列在接收到请求时真正工作的处理程序）。<br>因此，我们需要查看HTTP请求，从中提取出请求的URL以及GET/POST参数。这一功能应当属于路由还是服务器（甚至作为一个模块自身的功能）确实值得探讨，但这里暂定其为我们的HTTP服务器的功能。<br>们需要的所有数据都会包含在request对象中，该对象作为onRequest()回调函数的第一个参数传递。但是为了解析这些数据，我们需要额外的Node.JS模块，它们分别是url和querystring模块。<br>现在我们可以来编写路由了，建立一个名为router.js的文件，添加以下内容：</p>
+<h3 id="如何来进行请求的“路由”"><a href="#如何来进行请求的“路由”" class="headerlink" title="如何来进行请求的“路由”"></a>如何来进行请求的“路由”</h3><p>我们要为路由提供请求的URL和其他需要的GET及POST参数，随后路由需要根据这些数据来执行相应的代码（这里“代码”对应整个应用的第三部分：一系列在接收到请求时真正工作的处理程序）。<br>因此，我们需要查看HTTP请求，从中提取出请求的URL以及GET/POST参数。这一功能应当属于路由还是服务器（甚至作为一个模块自身的功能）确实值得探讨，但这里暂定其为我们的HTTP服务器的功能。<br>们需要的所有数据都会包含在request对象中，该对象作为onRequest()回调函数的第一个参数传递。但是为了解析这些数据，我们需要额外的Node.JS模块，它们分别是url和querystring模块。<br>现在我们可以来编写路由了，建立一个名为router.js的文件，添加以下内容：</p>
 <p><pre><code><br>function route(handle, pathname, response, request) {<br>    console.log(“About to route a request for “ + pathname);<br>    if (typeof handle[pathname] === ‘function’) {<br>        handle<a href="response, request">pathname</a>;<br>    } else {<br>        console.log(“No request handler found for “ + pathname);<br>        response.writeHead(404, {“Content-Type”: “text/html”});<br>        response.write(“404 Not found”);<br>        response.end();<br>    }<br>}<br>exports.route = route;<br></code><pre></pre></pre></p>
-<h3 id="路由给真正的请求处理程序">路由给真正的请求处理程序</h3><p>回到正题，现在我们的HTTP服务器和请求路由模块已经如我们的期望，可以相互交流了，就像一对亲密无间的兄弟。<br>当然这还远远不够，路由，顾名思义，是指我们要针对不同的URL有不同的处理方式。例如处理/start的“业务逻辑”就应该和处理/upload的不同。<br>在现在的实现下，路由过程会在路由模块中“结束”，并且路由模块并不是真正针对请求“采取行动”的模块，否则当我们的应用程序变得更为复杂时，将无法很好地扩展。<br>我们暂时把作为路由目标的函数称为请求处理程序。现在我们不要急着来开发路由模块，因为如果请求处理程序没有就绪的话，再怎么完善路由模块也没有多大意义。<br>应用程序需要新的部件，因此加入新的模块 – 已经无需为此感到新奇了。我们来创建一个叫做requestHandlers的模块，并对于每一个请求处理程序，添加一个占位用函数，随后将这些函数作为模块的方法导出：</p>
+<h3 id="路由给真正的请求处理程序"><a href="#路由给真正的请求处理程序" class="headerlink" title="路由给真正的请求处理程序"></a>路由给真正的请求处理程序</h3><p>回到正题，现在我们的HTTP服务器和请求路由模块已经如我们的期望，可以相互交流了，就像一对亲密无间的兄弟。<br>当然这还远远不够，路由，顾名思义，是指我们要针对不同的URL有不同的处理方式。例如处理/start的“业务逻辑”就应该和处理/upload的不同。<br>在现在的实现下，路由过程会在路由模块中“结束”，并且路由模块并不是真正针对请求“采取行动”的模块，否则当我们的应用程序变得更为复杂时，将无法很好地扩展。<br>我们暂时把作为路由目标的函数称为请求处理程序。现在我们不要急着来开发路由模块，因为如果请求处理程序没有就绪的话，再怎么完善路由模块也没有多大意义。<br>应用程序需要新的部件，因此加入新的模块 – 已经无需为此感到新奇了。我们来创建一个叫做requestHandlers的模块，并对于每一个请求处理程序，添加一个占位用函数，随后将这些函数作为模块的方法导出：</p>
 <p><pre><code><br>var querystring = require(“querystring”),<br>    fs = require(“fs”),<br>    formidable = require(“formidable”);<br>function start(response) {<br>    console.log(“Request handler ‘start’ was called.”);<br>    var body = ‘&lt;html&gt;’+<br>        ‘&lt;head&gt;’+<br>        ‘&lt;meta http-equiv=”Content-Type” content=”text/html; ‘+<br>        ‘charset=UTF-8” /&gt;’+<br>        ‘&lt;/head&gt;’+<br>        ‘&lt;body&gt;’+<br>        ‘&lt;form action=”/upload” enctype=”multipart/form-data” ‘+<br>        ‘method=”post”&gt;’+<br>        ‘&lt;input type=”file” name=”upload” multiple=”multiple”&gt;’+<br>        ‘&lt;input type=”submit” value=”Upload file” /&gt;’+<br>        ‘&lt;/form&gt;’+<br>        ‘&lt;/body&gt;’+<br>        ‘&lt;/html&gt;’;<br>    response.writeHead(200, {“Content-Type”: “text/html”});<br>    response.write(body);<br>    response.end();<br>}<br>function upload(response, request) {<br>    console.log(“Request handler ‘upload’ was called.”);<br>    var form = new formidable.IncomingForm();<br>    console.log(“about to parse”);<br>    form.parse(request, function(error, fields, files) {<br>        console.log(“parsing done”);<br>        fs.renameSync(files.upload.path, “/tmp/test.png”);<br>        response.writeHead(200, {“Content-Type”: “text/html”});<br>        response.write(“received image:&lt;br/&gt;”);<br>        response.write(“&lt;img src=’/show’ /&gt;”);<br>        response.end();<br>    });<br>}<br>function show(response) {<br>    console.log(“Request handler ‘show’ was called.”);<br>    fs.readFile(“/tmp/test.png”, “binary”, function(error, file) {<br>        if(error) {<br>            response.writeHead(500, {“Content-Type”: “text/plain”});<br>            response.write(error + “\n”);<br>            response.end();<br>        } else {<br>            response.writeHead(200, {“Content-Type”: “image/png”});<br>            response.write(file, “binary”);<br>            response.end();<br>        }<br>    });<br>}<br>exports.start = start;<br>exports.upload = upload;<br>exports.show = show;<br></code></pre><br>这样我们就可以把请求处理程序和路由模块连接起来，让路由“有路可寻”。<br>好了，启动服务器，我们应用所有的功能就可以用了。选择一张本地图片，将其上传到服务器，然后浏览器就会显示该图片。</p>
-<h2 id="总结与展望">总结与展望</h2><p>恭喜，我们的任务已经完成了！我们开发完了一个Node.js的web应用，应用虽小，但却“五脏俱全”。接下来是不是对node.js越来越感兴趣了，反正我是深深的爱上了他，么么哒ლ(°◕‵ƹ′◕ლ)!</p>
+<h2 id="总结与展望"><a href="#总结与展望" class="headerlink" title="总结与展望"></a>总结与展望</h2><p>恭喜，我们的任务已经完成了！我们开发完了一个Node.js的web应用，应用虽小，但却“五脏俱全”。接下来是不是对node.js越来越感兴趣了，反正我是深深的爱上了他，么么哒ლ(°◕‵ƹ′◕ლ)!</p>
 
       
     </div>
@@ -139,8 +139,8 @@
           <div class="clearfix"></div>
           <nav id="pagination">
   
+    <a href="/2015/10/07/css动画/" class="alignleft prev"><i class="fa fa-long-arrow-left"></i>Next</a>
   
-    <a href="/2015/08/03/hello-world/" class="alignright next">Prev<i class="fa fa-long-arrow-right"></i></a>
   
   <div class="clearfix"></div>
 </nav>
@@ -152,7 +152,7 @@
 
 
 <section id="comment">
-  <h1 class="title">留言</h1>
+  <h1 class="title">Kommentare</h1>
 
   
       <!-- Duoshuo Comment BEGIN -->
@@ -167,16 +167,16 @@
   </div>
   <footer id="footer" class="inner"><div>
   
-  &copy; 2015 shanruo
+  &copy; 2017 shanruo
   
 </div>
 Powered by <a href="http://zespia.tw/hexo/" title="Hexo" target="_blank" rel="external">Hexo</a> and <a href="http://pages.github.com/" title="GitHub Pages" target="_blank" rel="external">GitHub Pages</a>
 
 <div class="clearfix"></div></footer>
   
-<script src="/js/jquery.imagesloaded.min.js" type="text/javascript"></script>
-<script src="/js/gallery.js" type="text/javascript"></script>
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
 
 
 
