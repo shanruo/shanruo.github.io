@@ -1,0 +1,336 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>babel插件开发总结 | Shanruo</title>
+  <meta name="author" content="shanruo">
+  
+  <meta name="description" content="1 前言相信目前常与 ES6 代码打交道的同学对 Babel 应该不会陌生，在 ES6 代码被编译转化为 ES5 代码的过程中，Babel 插件显得尤为重要，Babel 是一个通用的多功能的 JavaScript 编译器，更确切地说是源码到源码的编译器，通常也叫做“转换编译器（transpiler）">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="babel插件开发总结"/>
+  <meta property="og:site_name" content="Shanruo"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Shanruo" type="application/atom+xml">
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+<link rel="stylesheet" href="/css/style.css">
+  <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-368771XX-X']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</head>
+
+<body>
+  <header id="header" class='normal_mode'>
+    <nav id="main-nav">
+  <ul class='container'>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+  </header>
+  <div id="content" class="container">
+    <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+      <time datetime="2017-05-17T05:58:37.000Z"><a href="/2017/05/17/babel插件开发总结/">Wed, May 17 2017, 1:58:37 pm</a></time>
+
+  
+    <h1 class="title">babel插件开发总结</h1>
+  
+
+
+
+<div class="clear"></div>
+      
+    </header>
+    <div class="entry">
+      
+        <h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1 前言"></a>1 前言</h1><p>相信目前常与 ES6 代码打交道的同学对 Babel 应该不会陌生，在 ES6 代码被编译转化为 ES5 代码的过程中，Babel 插件显得尤为重要，Babel 是一个通用的多功能的 JavaScript 编译器，更确切地说是源码到源码的编译器，通常也叫做“转换编译器（transpiler）”，意思是说你为 Babel 提供一些 JavaScript 代码，Babel 更改这些代码，然后返回给你新生成的代码。</p>
+<p>此外它还拥有众多模块可用于不同形式的静态分析，我们最后经由 Babel 生成的代码取决于插件在这一层中做了什么事，在探索这其中的过程之前，我们先来了解下一些所需的基础知识。</p>
+<h1 id="2-基础"><a href="#2-基础" class="headerlink" title="2 基础"></a>2 基础</h1><h2 id="2-1-静态分析"><a href="#2-1-静态分析" class="headerlink" title="2.1 静态分析"></a>2.1 静态分析</h2><p>静态分析是在不需要执行代码的前提下对代码进行分析的处理过程 （执行代码的同时进行代码分析即是动态分析），静态分析的目的是多种多样的， 它可用于语法检查，编译，代码高亮，代码转换，优化，压缩等等场景。</p>
+<h2 id="2-2-抽象语法树"><a href="#2-2-抽象语法树" class="headerlink" title="2.2 抽象语法树"></a>2.2 抽象语法树</h2><p>Babel 的三个主要处理步骤分别是： 解析（parse），转换（transform），生成（generate），这个处理过程中的每一步都涉及到创建或是操作抽象语法树，亦称 AST。</p>
+<p>Babel 的工作流可以用下面一张图来表示，代码首先经由 babylon 解析成抽象语法树（AST），后经一些遍历和分析转换（主要过程），最后根据转换后的 AST 生成新的常规代码。</p>
+<p><img src="/image/20170517babel/babelplugin.png"></p>
+<p>babylon AST文档可以参考<a href="https://github.com/babel/babylon/blob/master/ast/spec.md" target="_blank" rel="external">这里</a>，这个文档对每个节点类型都做了详细的说明，你可以对照各个节点类型在这查找到所需要的信息。</p>
+<h2 id="2-3-遍历节点"><a href="#2-3-遍历节点" class="headerlink" title="2.3 遍历节点"></a>2.3 遍历节点</h2><p>在插件里进行节点遍历需要先了解 visitor 和 path 的概念，前者相当于从众多节点类型中选择开发者所需要的节点，后者相当于对节点之间的关系的访问。</p>
+<h3 id="2-3-1-visitor"><a href="#2-3-1-visitor" class="headerlink" title="2.3.1 visitor"></a>2.3.1 visitor</h3><p>visitor是一个用于 AST 遍历的跨语言的模式,简单的说它们就是一个对象，定义了用于在一个树状结构中获取具体节点的方法。</p>
+<p>比如我只想访问 if…else 生成的节点，我们可以在 visitor 里指定获取它所对应的节点：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> visitor = &#123;</div><div class="line">  IfStatement() &#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'get if'</span>);</div><div class="line">  &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>其实上述遍历会让每个节点都被访问两次，一次是向下遍历代表进入（enter），一次是向上退出（exit）。因此实际上每个节点都会有 enter 和 exit 方法，在实际操作的时候需要注意这种遍历方式可能会引起的一些问题，上述例子是省略掉 enter 的简写。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> visitor = &#123;</div><div class="line">  <span class="attr">IfStatement</span>: &#123;</div><div class="line">    enter() &#123;&#125;,</div><div class="line">    exit() &#123;&#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2-3-2-path"><a href="#2-3-2-path" class="headerlink" title="2.3.2 path"></a>2.3.2 path</h3><p>AST 通常会有许多节点，那么节点直接如何相互关联？</p>
+<p>Path 是一个对象，它表示两个节点之间的连接。通过这个对象我们可以访问到节点、父节点以及进行一系列跟节点操作相关的方法（类似 DOM 的操作）。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> MyVisitor = &#123;</div><div class="line">  Identifier(path) &#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">"Visiting: "</span> + path.node.name);</div><div class="line">  &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h1 id="3-基于AST实现代码注入（-alife-doctor-code-inject）"><a href="#3-基于AST实现代码注入（-alife-doctor-code-inject）" class="headerlink" title="3 基于AST实现代码注入（@alife/doctor-code-inject）"></a>3 基于AST实现代码注入（@alife/doctor-code-inject）</h1><p>此插件主要用在实现基于Relim的构建式开发模式中，将生成代码注入react代码模板中。</p>
+<p>tnpm：<a href="http://web.npm.alibaba-inc.com/package/@alife/doctor-code-inject" target="_blank" rel="external">http://web.npm.alibaba-inc.com/package/@alife/doctor-code-inject</a></p>
+<h2 id="3-1-实现功能"><a href="#3-1-实现功能" class="headerlink" title="3.1 实现功能"></a>3.1 实现功能</h2><h3 id="3-1-1-支持批量插入classMethod"><a href="#3-1-1-支持批量插入classMethod" class="headerlink" title="3.1.1 支持批量插入classMethod"></a>3.1.1 支持批量插入classMethod</h3><p><strong>API</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">insertCodeToScript(originCode, insert)</div></pre></td></tr></table></figure>
+<p><strong>参数说明：</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>类型</th>
+<th>默认值 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>originCode</td>
+<td>初始代码</td>
+<td>String</td>
+<td>无默认，必传，required  </td>
+</tr>
+<tr>
+<td>insert</td>
+<td>批量插入的方法</td>
+<td>Array</td>
+<td>无默认，必传，required</td>
+</tr>
+</tbody>
+</table>
+<p><strong>insert实例：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> insert = [&#123;</div><div class="line">    <span class="attr">name</span>: <span class="string">'render'</span>,<span class="comment">// 方法名</span></div><div class="line">    body: render,<span class="comment">// 插入的代码</span></div><div class="line">    isCover: <span class="literal">true</span> <span class="comment">// 是否强制覆盖，默认不覆盖，设置为true则强制覆盖</span></div><div class="line">&#125;, &#123;</div><div class="line">    <span class="attr">name</span>: <span class="string">'add'</span>,</div><div class="line">    <span class="attr">argv</span>: [<span class="string">'c'</span>, <span class="string">'d'</span>], <span class="comment">// 方法传入的参数，会自动检测参数是否已经被定义</span></div><div class="line">    body: add</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+<p><strong>关键实现：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> *  批量插入ClassMethod、在组件顶部插入引用代码</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">insertCodeToScript</span>(<span class="params">originCode, insert</span>) </span>&#123;</div><div class="line">    <span class="keyword">const</span> ast = util.parse2AST(originCode);</div><div class="line">    Traverse(ast, &#123;</div><div class="line">        ClassBody(path) &#123;</div><div class="line">            <span class="keyword">if</span> (!<span class="built_in">Array</span>.isArray(insert)) &#123;</div><div class="line">                <span class="keyword">throw</span> <span class="built_in">TypeError</span>(<span class="string">'插入字段类型必须为数组'</span>);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> insert) &#123;</div><div class="line">                <span class="keyword">const</span> methodObj = insert[key],</div><div class="line">                    name = methodObj.name,</div><div class="line">                    argv = methodObj.argv,</div><div class="line">                    body = methodObj.body,</div><div class="line">                    isCover = methodObj.isCover;</div><div class="line"></div><div class="line">                <span class="keyword">if</span> (<span class="keyword">typeof</span> name !== <span class="string">'string'</span>) &#123;</div><div class="line">                    <span class="keyword">throw</span> <span class="built_in">TypeError</span>(<span class="string">'方法名必须为字符串'</span>);</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                <span class="keyword">const</span> newAst = util.getTemplateAst(body, &#123;</div><div class="line">                    <span class="attr">sourceType</span>: <span class="string">"script"</span></div><div class="line">                &#125;);</div><div class="line"></div><div class="line">                <span class="keyword">const</span> isExist = util.overideSameMethod(name, path, isCover);</div><div class="line">                <span class="keyword">if</span> (isExist &amp;&amp; !isCover) &#123;</div><div class="line">                    <span class="built_in">console</span>.log(logSymbols.warning, (<span class="string">'方法'</span> + name + <span class="string">'()已经存在，如果要强制覆盖，请设置参数isCover: true'</span>).yellow);</div><div class="line">                    <span class="keyword">continue</span>;</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">const</span> params = util.checkParams(argv, newAst);</div><div class="line">                <span class="keyword">const</span> property = Types.ClassMethod(<span class="string">'method'</span>, Types.identifier(name), params, Types.BlockStatement(newAst));</div><div class="line">                path.node.body.push(property);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    <span class="keyword">return</span> generator(ast).code;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="3-1-2-支持在文件最顶部注入引用代码"><a href="#3-1-2-支持在文件最顶部注入引用代码" class="headerlink" title="3.1.2 支持在文件最顶部注入引用代码"></a>3.1.2 支持在文件最顶部注入引用代码</h3><p><strong>API</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">insertImportCode(originCode, importsCode)</div></pre></td></tr></table></figure>
+<p><strong>参数说明：</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>类型</th>
+<th>默认值 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>originCode</td>
+<td>初始代码</td>
+<td>String</td>
+<td>无默认，必传，required  </td>
+</tr>
+<tr>
+<td>importsCode</td>
+<td>插入引用代码</td>
+<td>String</td>
+<td>无默认，必传，required</td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键实现：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> *  向js文件顶部插入组件引入代码</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">insertImportCode</span>(<span class="params">originCode, importsCode</span>) </span>&#123;</div><div class="line">    <span class="keyword">const</span> ast = util.parse2AST(originCode);</div><div class="line">    Traverse(ast, &#123;</div><div class="line">        <span class="attr">Program</span>: &#123;</div><div class="line">            <span class="attr">exit</span>: <span class="function"><span class="keyword">function</span>(<span class="params">path</span>) </span>&#123;</div><div class="line">                <span class="keyword">if</span> (importsCode) &#123;</div><div class="line">                    <span class="keyword">const</span> importAst = util.getTemplateAst(importsCode, &#123;</div><div class="line">                        <span class="attr">sourceType</span>: <span class="string">'module'</span></div><div class="line">                    &#125;);</div><div class="line">                    path.unshiftContainer(<span class="string">'body'</span>, importAst)</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    <span class="keyword">return</span> generator(ast).code;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="3-1-3-支持批量往方法中注入代码"><a href="#3-1-3-支持批量往方法中注入代码" class="headerlink" title="3.1.3 支持批量往方法中注入代码"></a>3.1.3 支持批量往方法中注入代码</h3><p><strong>API</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">insertCodeToMethod(originCode, injectCode)</div></pre></td></tr></table></figure>
+<p><strong>参数说明：</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>类型</th>
+<th>默认值 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>originCode</td>
+<td>初始代码</td>
+<td>String</td>
+<td>无默认，必传，required</td>
+</tr>
+<tr>
+<td>injectCode</td>
+<td>批量往方法插入的代码</td>
+<td>Array</td>
+<td>无默认，必传，required</td>
+</tr>
+</tbody>
+</table>
+<p><strong>injectCode实例：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> injectCode = [&#123;</div><div class="line">    <span class="attr">name</span>: <span class="string">'constructor'</span>,<span class="comment">// 要插入代码的方法名</span></div><div class="line">    code: insertCodeNext,<span class="comment">// 要插入的代码</span></div><div class="line">&#125;,&#123;</div><div class="line">    <span class="attr">name</span>: <span class="string">'render'</span>,</div><div class="line">    <span class="attr">code</span>: insertCodePrev,</div><div class="line">    <span class="attr">pos</span>: <span class="string">'prev'</span><span class="comment">// 默认是插入在方法块的最后面，配置成'prev',则插入在方法块的最前面</span></div><div class="line">&#125;];</div></pre></td></tr></table></figure>
+<p><strong>关键实现：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> *  向方法里面插入代码</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">insertCodeToMethod</span>(<span class="params">originCode, injectCode</span>) </span>&#123;</div><div class="line">    <span class="keyword">const</span> ast = util.parse2AST(originCode);</div><div class="line">    Traverse(ast, &#123;</div><div class="line">        ClassMethod(path) &#123;</div><div class="line">            <span class="keyword">if</span> (!<span class="built_in">Array</span>.isArray(injectCode)) &#123;</div><div class="line">                <span class="keyword">throw</span> <span class="built_in">TypeError</span>(<span class="string">'插入字段类型必须为数组'</span>);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">const</span> methodName = path.get(<span class="string">'body'</span>).container.key.name;</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> injectCode) &#123;</div><div class="line">                <span class="keyword">const</span> inject = injectCode[key],</div><div class="line">                    name = inject.name,</div><div class="line">                    code = inject.code,</div><div class="line">                    pos = inject.pos;</div><div class="line"></div><div class="line">                <span class="keyword">const</span> newAst = util.getTemplateAst(code, &#123;</div><div class="line">                    <span class="attr">sourceType</span>: <span class="string">"script"</span></div><div class="line">                &#125;);</div><div class="line">                <span class="keyword">if</span> (methodName === name) &#123;</div><div class="line">                    <span class="keyword">if</span> (pos === <span class="string">'prev'</span>) &#123;</div><div class="line">                        <span class="built_in">Array</span>.prototype.unshift.apply(path.node.body.body, newAst);</div><div class="line">                    &#125; <span class="keyword">else</span> &#123;</div><div class="line">                        <span class="built_in">Array</span>.prototype.push.apply(path.node.body.body, newAst);</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    <span class="keyword">return</span> generator(ast).code;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="3-2-Util"><a href="#3-2-Util" class="headerlink" title="3.2 Util"></a>3.2 Util</h2><h3 id="3-2-1-parse2AST"><a href="#3-2-1-parse2AST" class="headerlink" title="3.2.1 parse2AST"></a>3.2.1 parse2AST</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> *  code转化成对应的抽象语法树（AST）</div><div class="line"> */</div><div class="line">exports.parse2AST = <span class="function"><span class="keyword">function</span>(<span class="params">content</span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> babylon.parse(content, &#123;</div><div class="line">        <span class="attr">sourceType</span>: <span class="string">'module'</span>,</div><div class="line">        <span class="attr">plugins</span>: [</div><div class="line">            <span class="string">'asyncFunctions'</span>,</div><div class="line">            <span class="string">'classConstructorCall'</span>,</div><div class="line">            <span class="string">'jsx'</span>,</div><div class="line">            <span class="string">'flow'</span>,</div><div class="line">            <span class="string">'trailingFunctionCommas'</span>,</div><div class="line">            <span class="string">'doExpressions'</span>,</div><div class="line">            <span class="string">'objectRestSpread'</span>,</div><div class="line">            <span class="string">'decorators'</span>,</div><div class="line">            <span class="string">'classProperties'</span>,</div><div class="line">            <span class="string">'exportExtensions'</span>,</div><div class="line">            <span class="string">'exponentiationOperator'</span>,</div><div class="line">            <span class="string">'asyncGenerators'</span>,</div><div class="line">            <span class="string">'functionBind'</span>,</div><div class="line">            <span class="string">'functionSent'</span></div><div class="line">        ]</div><div class="line">    &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="3-2-2-getTemplateAst"><a href="#3-2-2-getTemplateAst" class="headerlink" title="3.2.2 getTemplateAst"></a>3.2.2 getTemplateAst</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> *  将模板字符串生成为AST</div><div class="line"> */</div><div class="line">exports.getTemplateAst = <span class="function"><span class="keyword">function</span>(<span class="params">tpl, opts = &#123;&#125;</span>) </span>&#123;</div><div class="line">    <span class="keyword">let</span> ast = babel.template(tpl, opts)(&#123;&#125;);</div><div class="line">    <span class="keyword">if</span> (!<span class="built_in">Array</span>.isArray(ast)) &#123;</div><div class="line">        <span class="keyword">let</span> arrAst = [];</div><div class="line">        arrAst.push(ast);</div><div class="line">        <span class="keyword">return</span> arrAst;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">return</span> ast;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过编写 Babel 插件，对 AST 有了一定的了解，而且现阶段 Babel 插件不仅仅止于对 ES6 代码的转换上，npm 上有一系列的插件覆盖了许多适合的应用场景，后续具有一定的探索性。</p>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
+<li><a href="https://github.com/brigand/babel-plugin-handbook/blob/master/translations/zh-Hans/README.md" target="_blank" rel="external">Babel插件开发指南中文手册</a></li>
+<li><a href="https://github.com/babel/babylon/blob/master/ast/spec.md" target="_blank" rel="external">Babylon AST文档</a></li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+          
+<!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <span class="jiathis_txt">分享到：</span>
+  <a class="jiathis_button_weixin">微信</a>
+  <a class="jiathis_button_tsina">新浪微博</a>
+  <a class="jiathis_button_renren">人人网</a>
+  <a class="jiathis_button_qzone">QQ空间</a>
+  <a class="jiathis_button_douban">豆瓣</a>
+  <a class="jiathis_button_pocket">Pocket</a>
+  <a href="http://www.jiathis.com/share?uid=901656" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code_mini/jia.js?uid=901656" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+          <div class="clearfix"></div>
+          <nav id="pagination">
+  
+  
+    <a href="/2017/03/14/react学习总结/" class="alignright next">Prev<i class="fa fa-long-arrow-right"></i></a>
+  
+  <div class="clearfix"></div>
+</nav>
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">Kommentare</h1>
+
+  
+      <!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-thread-key="/2017/05/17/babel插件开发总结/"></div>
+<!-- Duoshuo Comment END -->
+  
+</section>
+
+
+
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div>
+  
+  &copy; 2017 shanruo
+  
+</div>
+Powered by <a href="http://zespia.tw/hexo/" title="Hexo" target="_blank" rel="external">Hexo</a> and <a href="http://pages.github.com/" title="GitHub Pages" target="_blank" rel="external">GitHub Pages</a>
+
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
+
+
+
+    <script type="text/javascript">
+        (function(){
+
+            $(window).scroll(function(){
+
+                var scrollTop = $(window).scrollTop();
+                if ( scrollTop >200 ){
+                    $("#main-nav").removeClass('normal_mode').addClass('top_mode');
+                } else{
+                    $("#main-nav").removeClass('top_mode').addClass('normal_mode');
+                }
+
+            });
+
+        })();
+    </script>
+
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript">
+  (function($){
+    $('.fancybox').fancybox({
+      'titlePosition': 'inside'
+    });
+  })(jQuery);
+  </script>
+
+
+
+    
+    <script type="text/javascript">
+      var duoshuoQuery = {short_name:"shanruo"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = 'http://static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] 
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+
+
+<script type="text/javascript">
+  
+  $(function(){
+
+    $('.title').hover(
+      function() {      
+        $(this).stop().animate(
+          {'marginLeft': '10px'}, 200
+        );   
+      }, 
+      function() {       
+        $(this).stop().animate({'marginLeft': '0px'}, 200);      
+      
+    });   
+
+  });
+
+</script>
+
+
+</body>
+</html>
